@@ -311,21 +311,20 @@ const COMPANIES_CONFIG: CompanyConfig[] = [
     name: "Vang bac Da quy Phu Nhuan",
     kpis: [
       {
-        key: "sssg",
-        label: "SSSG (cua hang hien huu)",
-        unit: "%",
-        isRate: true,
-        agg: "avg",
-        desc: "Same-Store Sales Growth – tang truong doanh thu tren tap cua hang hien huu.",
+        key: "stores",
+        label: "So cua hang",
+        unit: "cua hang",
+        agg: "last",
+        desc: "Tong so cua hang cuoi ky (end-of-period).",
         sources: [
           {
-            title: "PNJ — Thuyet minh/KQKD quy (chi tieu SSSG neu cong bo)",
-            asOf: "Quy gan nhat",
+            title: "PNJ — Bao cao thuong nien/IR (thong ke he thong cua hang)",
+            asOf: "FY/YTD",
             page: "(dien tr.)",
-            note: "Neu khong cong bo: tu tinh tren tap cua hang same-store.",
+            note: "Lay so cua hang cuoi ky.",
           },
         ],
-        series: { seed: "PNJ_sssg", base: 0.09, drift: -0.0015, vol: 0.035, min: -0.2, max: 0.28, seasonal: "none" },
+        series: { seed: "PNJ_stores", base: 360, drift: 0.007, vol: 2.4, min: 300, integer: true, seasonal: "none" },
       },
       {
         key: "rev",
@@ -350,21 +349,20 @@ const COMPANIES_CONFIG: CompanyConfig[] = [
     name: "The Gioi Di Dong",
     kpis: [
       {
-        key: "sssg",
-        label: "SSSG (cua hang hien huu)",
-        unit: "%",
-        isRate: true,
-        agg: "avg",
-        desc: "SSSG phan anh suc cau va nang suat tren cua hang hien huu.",
+        key: "stores",
+        label: "So cua hang",
+        unit: "cua hang",
+        agg: "last",
+        desc: "Tong so diem ban cuoi ky (toan he thong).",
         sources: [
           {
-            title: "MWG — IR/Update KQKD (SSSG theo chuoi neu co) hoac tu tinh same-store",
-            asOf: "Quy gan nhat",
+            title: "MWG — Bao cao thuong nien/IR (he thong cua hang theo chuoi)",
+            asOf: "FY/YTD",
             page: "(dien tr.)",
-            note: "Dinh nghia tap cua hang same-store nhat quan.",
+            note: "Lay so end-of-period; neu co theo chuoi thi luu chi tiet.",
           },
         ],
-        series: { seed: "MWG_sssg", base: 0.05, drift: -0.001, vol: 0.04, min: -0.25, max: 0.3, seasonal: "none" },
+        series: { seed: "MWG_stores", base: 4200, drift: -0.002, vol: 28, min: 2500, max: 5000, integer: true, seasonal: "none" },
       },
       {
         key: "rev",
@@ -427,21 +425,21 @@ const COMPANIES_CONFIG: CompanyConfig[] = [
     name: "Techcombank",
     kpis: [
       {
-        key: "nim",
-        label: "NIM",
+        key: "credit_yoy",
+        label: "Tang truong tin dung (YoY)",
         unit: "%",
         isRate: true,
         agg: "avg",
-        desc: "Net Interest Margin — hieu qua tai tro va danh muc sinh lai.",
+        desc: "Tang truong du no cho vay so voi cung ky.",
         sources: [
           {
-            title: "TCB — BCTC/IR (NIM) — thuong co trong slide KQKD",
-            asOf: "Quy/FY",
+            title: "TCB — BCTC/IR (du no cho vay) hoac slide KQKD (YoY)",
+            asOf: "Quy gan nhat",
             page: "(dien tr.)",
-            note: "Neu tu tinh: Thu nhap lai thuan / Tai san sinh lai binh quan.",
+            note: "Neu tu tinh: (Du no ky nay / du no cung ky - 1).",
           },
         ],
-        series: { seed: "TCB_nim", base: 0.048, drift: -0.0011, vol: 0.0035, min: 0.026, max: 0.062, seasonal: "none" },
+        series: { seed: "TCB_credit", base: 0.18, drift: -0.004, vol: 0.035, min: -0.05, max: 0.32, seasonal: "none" },
       },
       {
         key: "rev",
