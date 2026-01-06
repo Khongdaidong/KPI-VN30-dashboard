@@ -57,7 +57,7 @@ export function TabsTrigger({ value, className, children, ...props }: TabsTrigge
       className={cn(
         "inline-flex min-w-[72px] items-center justify-center rounded-lg px-3 py-2 text-sm font-medium transition",
         "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60",
-        isActive ? "bg-background shadow-sm" : "text-muted-foreground hover:text-foreground",
+        isActive ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
         className
       )}
       {...props}
