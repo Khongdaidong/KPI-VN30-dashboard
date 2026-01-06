@@ -1,7 +1,12 @@
 import type { NextConfig } from "next";
 
+const repoBase = "/KPI-VN30-dashboard";
+
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: "export",
+  basePath: repoBase,
+  assetPrefix: `${repoBase}/`,
+  trailingSlash: true,
 };
 
 export default nextConfig;
