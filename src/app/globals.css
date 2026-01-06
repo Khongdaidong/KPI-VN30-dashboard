@@ -1,37 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0b1020;
+  --background: #f4f6fb;
   --foreground: #0f172a;
   --card: #ffffff;
   --card-foreground: #0f172a;
-  --muted: #f5f7fb;
-  --muted-foreground: #6b7280;
-  --border: #e5e7eb;
-  --primary: #0ea5e9;
+  --muted: #eef2f7;
+  --muted-foreground: #475569;
+  --border: #d8dee9;
+  --primary: #2563eb;
   --primary-foreground: #f8fafc;
-  --secondary: #eef2ff;
+  --secondary: #e2e8f0;
   --secondary-foreground: #0f172a;
-  --accent: #e0f2fe;
+  --accent: #dbeafe;
   --accent-foreground: #0f172a;
   --destructive: #ef4444;
   --destructive-foreground: #f8fafc;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0b1020;
-    --foreground: #e5e7eb;
-    --card: #0f172a;
-    --card-foreground: #e2e8f0;
-    --muted: #111827;
-    --muted-foreground: #94a3b8;
-    --border: #1f2937;
-    --secondary: #111827;
-    --secondary-foreground: #e5e7eb;
-    --accent: #0b1b35;
-    --accent-foreground: #e2e8f0;
-  }
 }
 
 @theme inline {
@@ -60,9 +44,9 @@
 
 body {
   min-height: 100vh;
-  background: radial-gradient(circle at 20% 20%, rgba(14, 165, 233, 0.08), transparent 25%),
-    radial-gradient(circle at 80% 0%, rgba(79, 70, 229, 0.09), transparent 30%),
-    var(--background);
+  background: radial-gradient(circle at 12% 18%, rgba(37, 99, 235, 0.08), transparent 30%),
+    radial-gradient(circle at 80% 10%, rgba(14, 165, 233, 0.08), transparent 28%),
+    linear-gradient(180deg, #f9fafc 0%, #eef2f7 100%);
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
 }
