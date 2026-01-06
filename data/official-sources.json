@@ -1,0 +1,31 @@
+{
+  "asOf": "2025Q4",
+  "PNJ": {
+    "stores": [
+      {
+        "period": "2025Q4",
+        "url": "https://example.com/pnj-q4.pdf",
+        "pattern": "S\\s*cua\\s*hang\\D+(\\d+[.,]?\\d*)"
+      }
+    ],
+    "rev": [
+      {
+        "period": "2025Q4",
+        "url": "https://example.com/pnj-q4.pdf",
+        "pattern": "Doanh\\s+thu\\s+thuan\\D+(\\d+[.,]?\\d+)"
+      }
+    ]
+  },
+  "MWG": {
+    "stores": [],
+    "rev": []
+  },
+  "HPG": {
+    "steel_volume": [],
+    "rev": []
+  },
+  "TCB": {
+    "credit_yoy": [],
+    "rev": []
+  }
+}

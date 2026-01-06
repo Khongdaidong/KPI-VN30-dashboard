@@ -6,11 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "refresh:data": "node scripts/scrape-official.js data/official-sources.json"
   },
   "dependencies": {
     "lucide-react": "^0.562.0",
     "next": "16.1.1",
+    "pdf-parse": "^2.4.5",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "recharts": "^3.6.0"
