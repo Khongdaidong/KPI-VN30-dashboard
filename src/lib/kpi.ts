@@ -66,10 +66,10 @@ export function formatValue(v: number | null, unit: string, isRate?: boolean) {
   if (unit === "%") return `${nf1.format(v * 100)}%`;
   if (unit === "pp") return `${nf1.format(v)} điểm %`;
   if (unit === "x") return `${nf2.format(v)}x`;
-  if (unit === "tỷ VND") return `${nf0.format(v)} tỷ`;
-  if (unit === "triệu tấn") return `${nf2.format(v)} triệu tấn`;
-  if (unit === "triệu VND/tấn") return `${nf1.format(v)} tr VND/tấn`;
-  if (unit === "cửa hàng") return `${nf0.format(v)} CH`;
+  if (unit === "ty VND") return `${nf0.format(v)} tỷ`;
+  if (unit === "trieu tan") return `${nf2.format(v)} triệu tấn`;
+  if (unit === "trieu VND/tan") return `${nf1.format(v)} tr VND/tấn`;
+  if (unit === "cua hang") return `${nf0.format(v)} CH`;
   return isRate ? nf2.format(v) : nf1.format(v);
 }
 
@@ -250,10 +250,10 @@ export function yTickFormatterFactory(kpi: KPI) {
     const n = typeof v === "number" ? v : Number(v);
     if (!Number.isFinite(n)) return "";
     if (kpi.unit === "%") return `${nf1.format(n * 100)}%`;
-    if (kpi.unit === "tỷ VND") return nf0.format(n);
-    if (kpi.unit === "cửa hàng") return nf0.format(n);
-    if (kpi.unit === "triệu tấn") return nf2.format(n);
-    if (kpi.unit === "triệu VND/tấn") return nf1.format(n);
+    if (kpi.unit === "ty VND") return nf0.format(n);
+    if (kpi.unit === "cua hang") return nf0.format(n);
+    if (kpi.unit === "trieu tan") return nf2.format(n);
+    if (kpi.unit === "trieu VND/tan") return nf1.format(n);
     if (kpi.unit === "x") return nf2.format(n);
     return nf1.format(n);
   };
@@ -308,381 +308,156 @@ type CompanyConfig = {
 const COMPANIES_CONFIG: CompanyConfig[] = [
   {
     ticker: "PNJ",
-    name: "Vàng bạc Đá quý Phú Nhuận",
+    name: "Vang bac Da quy Phu Nhuan",
     kpis: [
       {
-        key: "stores",
-        label: "Số cửa hàng",
-        unit: "cửa hàng",
-        agg: "last",
-        desc:
-          "Tổng số cửa hàng tại cuối kỳ. KPI dẫn dắt quy mô doanh thu bán lẻ; tăng cửa hàng thường kéo theo doanh thu nhưng có độ trễ và phụ thuộc năng suất/cửa hàng.",
-        sources: [
-          {
-            title: "PNJ — Báo cáo thường niên / IR (mục hệ thống cửa hàng)",
-            asOf: "FY/YTD gần nhất",
-            page: "(điền tr.)",
-            note: "Lấy số cửa hàng cuối kỳ (end-of-period).",
-          },
-        ],
-        series: { seed: "PNJ_stores", base: 360, drift: 0.007, vol: 2.4, min: 300, integer: true, seasonal: "none" },
-      },
-      {
         key: "sssg",
-        label: "SSSG (tăng trưởng cửa hàng hiện hữu)",
+        label: "SSSG (cua hang hien huu)",
         unit: "%",
         isRate: true,
         agg: "avg",
-        desc:
-          "Same-Store Sales Growth: tăng trưởng doanh thu trên cùng tập cửa hàng (hiện hữu). Quan trọng để phân biệt tăng trưởng do mở mới vs. do năng suất/cầu thị trường.",
+        desc: "Same-Store Sales Growth – tang truong doanh thu tren tap cua hang hien huu.",
         sources: [
           {
-            title: "PNJ — Thuyết minh/KQKD quý (chỉ tiêu SSSG nếu công bố)",
-            asOf: "Quý gần nhất",
-            page: "(điền tr.)",
-            note: "Nếu không công bố trực tiếp: tự tính theo doanh thu tập cửa hàng same-store (cần định nghĩa).",
+            title: "PNJ — Thuyet minh/KQKD quy (chi tieu SSSG neu cong bo)",
+            asOf: "Quy gan nhat",
+            page: "(dien tr.)",
+            note: "Neu khong cong bo: tu tinh tren tap cua hang same-store.",
           },
         ],
         series: { seed: "PNJ_sssg", base: 0.09, drift: -0.0015, vol: 0.035, min: -0.2, max: 0.28, seasonal: "none" },
       },
       {
         key: "rev",
-        label: "Doanh thu thuần",
-        unit: "tỷ VND",
+        label: "Doanh thu thuan",
+        unit: "ty VND",
         agg: "sum",
-        desc: "Doanh thu thuần theo quý (minh hoạ). Thường có tính mùa vụ, Q4 có thể cao hơn.",
+        desc: "Doanh thu thuan theo quy (minh hoa). Thuong co mua vu, Q4 cao hon.",
         sources: [
           {
-            title: "PNJ — BCTC hợp nhất (KQKD) — Doanh thu bán hàng và cung cấp dịch vụ",
-            asOf: "Quý/FY",
-            page: "(điền tr.)",
-            note: "Dùng số theo kỳ (flow). Nếu xem theo năm: cộng 4 quý.",
+            title: "PNJ — BCTC hop nhat (KQKD) — Doanh thu ban hang va cung cap dich vu",
+            asOf: "Quy/FY",
+            page: "(dien tr.)",
+            note: "So theo ky (flow). Neu xem nam: cong 4 quy.",
           },
         ],
         series: { seed: "PNJ_rev", base: 6200, drift: 0.017, vol: 430, min: 2500, seasonal: "q4_up" },
-      },
-      {
-        key: "gm",
-        label: "Biên lợi nhuận gộp",
-        unit: "%",
-        isRate: true,
-        agg: "avg",
-        desc:
-          "Biên LN gộp = (LN gộp / doanh thu). Nhạy với mix sản phẩm (vàng miếng vs trang sức), chiết khấu, và giá nguyên liệu.",
-        sources: [
-          {
-            title: "PNJ — BCTC hợp nhất (KQKD) — Lợi nhuận gộp & Doanh thu",
-            asOf: "Quý/FY",
-            page: "(điền tr.)",
-            note: "Tính = LN gộp / Doanh thu. Nhập % dạng decimal (0.18 = 18%).",
-          },
-        ],
-        series: { seed: "PNJ_gm", base: 0.175, drift: 0.0008, vol: 0.012, min: 0.11, max: 0.25, seasonal: "none" },
-      },
-      {
-        key: "pat",
-        label: "LNST",
-        unit: "tỷ VND",
-        agg: "sum",
-        desc: "Lợi nhuận sau thuế theo quý (minh hoạ). Nên đọc cùng SSSG, biên gộp và chi phí bán hàng/QLDN.",
-        sources: [
-          {
-            title: "PNJ — BCTC hợp nhất (KQKD) — Lợi nhuận sau thuế",
-            asOf: "Quý/FY",
-            page: "(điền tr.)",
-            note: "Dùng số theo kỳ (flow).",
-          },
-        ],
-        series: { seed: "PNJ_pat", base: 460, drift: 0.02, vol: 65, min: 90, seasonal: "q4_up" },
       },
     ],
   },
   {
     ticker: "MWG",
-    name: "Thế Giới Di Động",
+    name: "The Gioi Di Dong",
     kpis: [
       {
-        key: "stores",
-        label: "Tổng số cửa hàng (toàn hệ thống)",
-        unit: "cửa hàng",
-        agg: "last",
-        desc:
-          "Tổng số điểm bán cuối kỳ (minh hoạ). Với MWG, nên theo dõi theo chuỗi (TGDĐ/ĐMX/BHX/TopZone/An Khang…) vì mỗi chuỗi có economics khác nhau.",
-        sources: [
-          {
-            title: "MWG — Báo cáo thường niên/IR (thống kê hệ thống cửa hàng theo chuỗi)",
-            asOf: "FY/YTD gần nhất",
-            page: "(điền tr.)",
-            note: "Lấy số end-of-period; nếu có theo chuỗi, ưu tiên lưu chi tiết theo chuỗi.",
-          },
-        ],
-        series: {
-          seed: "MWG_stores",
-          base: 4200,
-          drift: -0.002,
-          vol: 28,
-          min: 2500,
-          max: 5000,
-          integer: true,
-          seasonal: "none",
-        },
-      },
-      {
         key: "sssg",
-        label: "SSSG (tăng trưởng cửa hàng hiện hữu)",
+        label: "SSSG (cua hang hien huu)",
         unit: "%",
         isRate: true,
         agg: "avg",
-        desc:
-          "SSSG phản ánh sức cầu và năng suất trên nền cửa hàng hiện hữu. Với bán lẻ, SSSG thường là driver quan trọng nhất để giải thích biến động doanh thu/biên trong ngắn hạn.",
+        desc: "SSSG phan anh suc cau va nang suat tren cua hang hien huu.",
         sources: [
           {
-            title:
-              "MWG — IR/Update KQKD (SSSG theo chuỗi nếu có) hoặc tự tính theo định nghĩa same-store",
-            asOf: "Quý gần nhất",
-            page: "(điền tr.)",
-            note: "Nếu không công bố trực tiếp: cần định nghĩa tập cửa hàng same-store nhất quán.",
+            title: "MWG — IR/Update KQKD (SSSG theo chuoi neu co) hoac tu tinh same-store",
+            asOf: "Quy gan nhat",
+            page: "(dien tr.)",
+            note: "Dinh nghia tap cua hang same-store nhat quan.",
           },
         ],
         series: { seed: "MWG_sssg", base: 0.05, drift: -0.001, vol: 0.04, min: -0.25, max: 0.3, seasonal: "none" },
       },
       {
         key: "rev",
-        label: "Doanh thu thuần",
-        unit: "tỷ VND",
+        label: "Doanh thu thuan",
+        unit: "ty VND",
         agg: "sum",
-        desc:
-          "Doanh thu thuần theo quý (minh hoạ). Nên phân rã theo chuỗi (TGDĐ/ĐMX/BHX) và theo mùa vụ (Q4 thường cao).",
+        desc: "Doanh thu thuan theo quy (minh hoa). Nen doc cung SSSG de phan tich.",
         sources: [
           {
-            title: "MWG — BCTC hợp nhất (KQKD) — Doanh thu thuần",
-            asOf: "Quý/FY",
-            page: "(điền tr.)",
-            note: "Dùng số theo kỳ (flow). Nếu xem theo năm: cộng 4 quý.",
+            title: "MWG — BCTC hop nhat (KQKD) — Doanh thu thuan",
+            asOf: "Quy/FY",
+            page: "(dien tr.)",
+            note: "So theo ky (flow). Neu xem nam: cong 4 quy.",
           },
         ],
         series: { seed: "MWG_rev", base: 30000, drift: 0.005, vol: 1600, min: 18000, seasonal: "q4_up" },
-      },
-      {
-        key: "gm",
-        label: "Biên lợi nhuận gộp",
-        unit: "%",
-        isRate: true,
-        agg: "avg",
-        desc:
-          "Biên LN gộp phản ánh cạnh tranh giá, mix sản phẩm và hiệu quả chuỗi (đặc biệt BHX). Nên đọc cùng tỷ lệ khuyến mãi và chi phí logistics/fulfillment.",
-        sources: [
-          {
-            title: "MWG — BCTC hợp nhất (KQKD) — Lợi nhuận gộp & Doanh thu",
-            asOf: "Quý/FY",
-            page: "(điền tr.)",
-            note: "Tính = LN gộp / Doanh thu. Nhập dạng decimal (0.20 = 20%).",
-          },
-        ],
-        series: { seed: "MWG_gm", base: 0.205, drift: 0.0002, vol: 0.01, min: 0.14, max: 0.26, seasonal: "none" },
-      },
-      {
-        key: "pat",
-        label: "LNST",
-        unit: "tỷ VND",
-        agg: "sum",
-        desc:
-          "LNST theo quý (minh hoạ). Với MWG, nên theo dõi thêm chi phí bán hàng/QLDN (% doanh thu) và biên EBIT theo chuỗi.",
-        sources: [
-          {
-            title: "MWG — BCTC hợp nhất (KQKD) — Lợi nhuận sau thuế",
-            asOf: "Quý/FY",
-            page: "(điền tr.)",
-            note: "Dùng số theo kỳ (flow).",
-          },
-        ],
-        series: { seed: "MWG_pat", base: 750, drift: 0.004, vol: 140, min: -200, max: 1400, seasonal: "q4_up" },
       },
     ],
   },
   {
     ticker: "HPG",
-    name: "Tập đoàn Hòa Phát",
+    name: "Tap doan Hoa Phat",
     kpis: [
       {
         key: "steel_volume",
-        label: "Sản lượng thép bán",
-        unit: "triệu tấn",
+        label: "San luong thep ban",
+        unit: "trieu tan",
         agg: "sum",
-        desc:
-          "Sản lượng tiêu thụ theo quý (minh hoạ). KPI dẫn dắt doanh thu; chịu ảnh hưởng chu kỳ xây dựng, đầu tư công, xuất khẩu.",
+        desc: "San luong thep theo quy (minh hoa). KPI dan dat doanh thu.",
         sources: [
           {
-            title: "HPG — Báo cáo sản lượng/thông cáo tháng/quý (IR)",
-            asOf: "Quý gần nhất",
+            title: "HPG — Bao cao san luong/thong cao thang/quy (IR)",
+            asOf: "Quy gan nhat",
             page: "(n/a)",
-            note: "Nếu số theo tháng: cộng 3 tháng = 1 quý.",
+            note: "Neu so theo thang: cong 3 thang = 1 quy.",
           },
         ],
         series: { seed: "HPG_vol", base: 1.7, drift: 0.012, vol: 0.2, min: 0.7, max: 3.4, seasonal: "q4_up" },
       },
       {
-        key: "asp",
-        label: "Giá bán bình quân (ASP)",
-        unit: "triệu VND/tấn",
-        agg: "avg",
-        desc:
-          "ASP theo quý (minh hoạ). Theo dõi cùng giá nguyên liệu (quặng, than), spread HRC/CRC để hiểu biên.",
-        sources: [
-          {
-            title: "HPG — BCTC/Thuyết minh (ước tính) hoặc IR (nếu có công bố)",
-            asOf: "Quý/FY",
-            page: "(điền tr.)",
-            note:
-              "Nếu không công bố ASP: ước tính = Doanh thu thép / Sản lượng thép (cần tách segment).",
-          },
-        ],
-        series: { seed: "HPG_asp", base: 15.8, drift: -0.001, vol: 0.65, min: 10.5, max: 22.5, seasonal: "none" },
-      },
-      {
-        key: "gm",
-        label: "Biên lợi nhuận gộp",
-        unit: "%",
-        isRate: true,
-        agg: "avg",
-        desc: "Biên LN gộp. Nhạy mạnh với chu kỳ giá thép, tồn kho và chi phí đầu vào.",
-        sources: [
-          {
-            title: "HPG — BCTC hợp nhất (KQKD) — Lợi nhuận gộp & Doanh thu",
-            asOf: "Quý/FY",
-            page: "(điền tr.)",
-            note: "Tính = LN gộp / Doanh thu. Nhập dạng decimal (0.13 = 13%).",
-          },
-        ],
-        series: { seed: "HPG_gm", base: 0.125, drift: 0.0006, vol: 0.025, min: 0.02, max: 0.25, seasonal: "none" },
-      },
-      {
         key: "rev",
-        label: "Doanh thu thuần",
-        unit: "tỷ VND",
+        label: "Doanh thu thuan",
+        unit: "ty VND",
         agg: "sum",
-        desc: "Doanh thu theo quý (minh hoạ). Dẫn dắt bởi sản lượng × ASP.",
+        desc: "Doanh thu theo quy (minh hoa). Dan dat boi san luong x ASP.",
         sources: [
           {
-            title: "HPG — BCTC hợp nhất (KQKD) — Doanh thu thuần",
-            asOf: "Quý/FY",
-            page: "(điền tr.)",
-            note: "Dùng số theo kỳ (flow).",
+            title: "HPG — BCTC hop nhat (KQKD) — Doanh thu thuan",
+            asOf: "Quy/FY",
+            page: "(dien tr.)",
+            note: "So theo ky (flow).",
           },
         ],
         series: { seed: "HPG_rev", base: 23000, drift: 0.013, vol: 2100, min: 9000, seasonal: "q4_up" },
-      },
-      {
-        key: "netdebt_ebitda",
-        label: "Nợ ròng / EBITDA",
-        unit: "x",
-        agg: "avg",
-        desc:
-          "Đòn bẩy tài chính (minh hoạ). Với ngành chu kỳ, quản trị đòn bẩy quan trọng để sống qua đáy chu kỳ.",
-        sources: [
-          {
-            title: "HPG — BCĐKT + thuyết minh (nợ vay, tiền) và EBITDA (tự tính)",
-            asOf: "Quý/FY",
-            page: "(điền tr.)",
-            note:
-              "Nợ ròng = Nợ vay - Tiền/TS tương đương tiền. EBITDA: LNTT + lãi vay + khấu hao (tuỳ định nghĩa).",
-          },
-        ],
-        series: { seed: "HPG_nd", base: 1.5, drift: -0.012, vol: 0.16, min: 0, max: 3.8, seasonal: "none" },
       },
     ],
   },
   {
     ticker: "TCB",
-    name: "Ngân hàng Techcombank",
+    name: "Techcombank",
     kpis: [
-      {
-        key: "credit_yoy",
-        label: "Tăng trưởng tín dụng (YoY)",
-        unit: "%",
-        isRate: true,
-        agg: "avg",
-        desc:
-          "Tăng trưởng dư nợ cho vay so với cùng kỳ (minh hoạ). Dẫn dắt thu nhập lãi nhưng bị ràng buộc bởi hạn mức, cầu tín dụng và khẩu vị rủi ro.",
-        sources: [
-          {
-            title: "TCB — BCTC/IR (dư nợ cho vay) hoặc slide KQKD (YoY)",
-            asOf: "Quý gần nhất",
-            page: "(điền tr.)",
-            note: "Nếu không có YoY sẵn: tự tính = (Dư nợ kỳ này / Dư nợ cùng kỳ - 1).",
-          },
-        ],
-        series: { seed: "TCB_credit", base: 0.18, drift: -0.004, vol: 0.035, min: -0.05, max: 0.32, seasonal: "none" },
-      },
       {
         key: "nim",
         label: "NIM",
         unit: "%",
         isRate: true,
         agg: "avg",
-        desc:
-          "Net Interest Margin (minh hoạ). Nhạy với cấu trúc huy động (CASA), cạnh tranh lãi suất và mix tài sản.",
+        desc: "Net Interest Margin — hieu qua tai tro va danh muc sinh lai.",
         sources: [
           {
-            title: "TCB — BCTC/IR (NIM) — thường có trong thuyết minh/slide KQKD",
-            asOf: "Quý/FY",
-            page: "(điền tr.)",
-            note: "Nếu tự tính: (Thu nhập lãi thuần) / (Tài sản sinh lãi bình quân).",
+            title: "TCB — BCTC/IR (NIM) — thuong co trong slide KQKD",
+            asOf: "Quy/FY",
+            page: "(dien tr.)",
+            note: "Neu tu tinh: Thu nhap lai thuan / Tai san sinh lai binh quan.",
           },
         ],
         series: { seed: "TCB_nim", base: 0.048, drift: -0.0011, vol: 0.0035, min: 0.026, max: 0.062, seasonal: "none" },
       },
       {
-        key: "casa",
-        label: "CASA ratio",
-        unit: "%",
-        isRate: true,
-        agg: "avg",
-        desc: "Tỷ lệ tiền gửi không kỳ hạn (minh hoạ). CASA cao giúp chi phí vốn thấp, hỗ trợ NIM.",
+        key: "rev",
+        label: "Tong thu nhap hoat dong",
+        unit: "ty VND",
+        agg: "sum",
+        desc: "Tong thu nhap hoat dong/thu nhap gop theo quy (minh hoa).",
         sources: [
           {
-            title:
-              "TCB — BCTC/IR (tiền gửi không kỳ hạn & tổng tiền gửi) hoặc slide CASA",
-            asOf: "Quý/FY",
-            page: "(điền tr.)",
-            note: "Nếu tự tính: CASA = TGKKH / Tổng tiền gửi.",
+            title: "TCB — BCTC/IR (Tong thu nhap hoat dong)",
+            asOf: "Quy/FY",
+            page: "(dien tr.)",
+            note: "So theo ky (flow). Neu xem nam: cong 4 quy.",
           },
         ],
-        series: { seed: "TCB_casa", base: 0.36, drift: -0.001, vol: 0.023, min: 0.18, max: 0.48, seasonal: "none" },
-      },
-      {
-        key: "npl",
-        label: "NPL ratio",
-        unit: "%",
-        isRate: true,
-        agg: "avg",
-        desc: "Nợ xấu (minh hoạ). Theo dõi cùng bao phủ nợ xấu và credit cost để hiểu chất lượng tài sản.",
-        sources: [
-          {
-            title: "TCB — BCTC/Thuyết minh (phân loại nợ) hoặc IR (Asset quality)",
-            asOf: "Quý/FY",
-            page: "(điền tr.)",
-            note: "NPL thường = Nhóm 3-5 / Tổng dư nợ.",
-          },
-        ],
-        series: { seed: "TCB_npl", base: 0.01, drift: 0.00035, vol: 0.0025, min: 0.003, max: 0.035, seasonal: "none" },
-      },
-      {
-        key: "roe",
-        label: "ROE",
-        unit: "%",
-        isRate: true,
-        agg: "avg",
-        desc: "Tỷ suất lợi nhuận trên vốn (minh hoạ). Tổng hợp hiệu quả từ NIM, thu nhập ngoài lãi, chi phí và rủi ro.",
-        sources: [
-          {
-            title: "TCB — BCTC/IR (ROE) hoặc tự tính từ LNST & VCSH bình quân",
-            asOf: "Quý/FY",
-            page: "(điền tr.)",
-            note: "Nếu tự tính: ROE = LNST / VCSH bình quân.",
-          },
-        ],
-        series: { seed: "TCB_roe", base: 0.205, drift: -0.0016, vol: 0.017, min: 0.07, max: 0.3, seasonal: "none" },
+        series: { seed: "TCB_rev", base: 8500, drift: 0.01, vol: 520, min: 5000, seasonal: "none" },
       },
     ],
   },
@@ -703,7 +478,7 @@ function expandKpi(cfg: KpiConfig): KPI {
 
 export function buildDemoDataset(): Dataset {
   return {
-    asOf: "Dữ liệu DEMO minh hoạ (thay bằng số liệu thực tế từ BCTC/CBTT).",
+    asOf: "Demo minh hoa (thay bang so lieu thuc te tu BCTC/CBTT).",
     companies: COMPANIES_CONFIG.map((c) => ({
       ticker: c.ticker,
       name: c.name,
@@ -768,7 +543,7 @@ export function validateDataset(obj: unknown): Dataset {
       const seriesIn = k.series.map((sRaw: unknown) => {
         if (!sRaw || typeof sRaw !== "object") throw new Error("Series không hợp lệ.");
         const s = sRaw as Record<string, unknown>;
-        if (!PERIODS_Q.includes(s.period as PeriodQ)) throw new Error(`period không hợp lệ: ${s.period}`);
+        if (!PERIODS_Q.includes(s.period as PeriodQ)) throw new Error(`period không hợp lệ: ${String(s.period)}`);
         return { period: s.period as PeriodQ, value: safeNum(s.value) };
       });
 
