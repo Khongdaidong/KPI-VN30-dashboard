@@ -508,18 +508,28 @@ export default function VnKpiDashboard() {
                       <div className="h-[360px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
                           <LineChart data={chartData} margin={{ left: 12, right: 12, top: 10, bottom: 10 }}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="period" tick={{ fontSize: 12 }} interval={granularity === "Q" ? 1 : 0} />
+                            <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
+                            <XAxis
+                              dataKey="period"
+                              tick={{ fontSize: 12, fill: "#e5e7eb" }}
+                              tickLine={{ stroke: "#334155" }}
+                              axisLine={{ stroke: "#334155" }}
+                              interval={granularity === "Q" ? 1 : 0}
+                            />
                             <YAxis
                               yAxisId="left"
-                              tick={{ fontSize: 12 }}
+                              tick={{ fontSize: 12, fill: "#e5e7eb" }}
+                              tickLine={{ stroke: "#334155" }}
+                              axisLine={{ stroke: "#334155" }}
                               tickFormatter={primaryKpi ? yTickFormatterFactory(primaryKpi) : undefined}
                             />
                             {useSecondary && secondaryKpi ? (
                               <YAxis
                                 yAxisId="right"
                                 orientation="right"
-                                tick={{ fontSize: 12 }}
+                                tick={{ fontSize: 12, fill: "#e5e7eb" }}
+                                tickLine={{ stroke: "#334155" }}
+                                axisLine={{ stroke: "#334155" }}
                                 tickFormatter={yTickFormatterFactory(secondaryKpi)}
                               />
                             ) : null}
@@ -536,7 +546,7 @@ export default function VnKpiDashboard() {
                                 ) : null
                               }
                             />
-                            <Legend />
+                            <Legend wrapperStyle={{ color: "#e5e7eb" }} />
 
                             <Line
                               type="monotone"
@@ -681,9 +691,19 @@ export default function VnKpiDashboard() {
                       <div className="h-[320px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
                           <BarChart data={compareBars} margin={{ left: 12, right: 12, top: 10, bottom: 10 }}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="ticker" tick={{ fontSize: 12 }} />
-                            <YAxis tick={{ fontSize: 12 }} tickFormatter={primaryKpi ? yTickFormatterFactory(primaryKpi) : undefined} />
+                            <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
+                            <XAxis
+                              dataKey="ticker"
+                              tick={{ fontSize: 12, fill: "#e5e7eb" }}
+                              tickLine={{ stroke: "#334155" }}
+                              axisLine={{ stroke: "#334155" }}
+                            />
+                            <YAxis
+                              tick={{ fontSize: 12, fill: "#e5e7eb" }}
+                              tickLine={{ stroke: "#334155" }}
+                              axisLine={{ stroke: "#334155" }}
+                              tickFormatter={primaryKpi ? yTickFormatterFactory(primaryKpi) : undefined}
+                            />
                             <Tooltip formatter={tooltipFormatter} />
                             <Bar dataKey="value" name={primaryKpi?.label || "Gia tri"} />
                           </BarChart>
