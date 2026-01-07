@@ -1,31 +1,25 @@
 {
   "asOf": "2025Q4",
   "PNJ": {
-    "stores": [
-      {
-        "period": "2025Q4",
-        "url": "https://example.com/pnj-q4.pdf",
-        "pattern": "S\\s*cua\\s*hang\\D+(\\d+[.,]?\\d*)"
-      }
-    ],
-    "rev": [
-      {
-        "period": "2025Q4",
-        "url": "https://example.com/pnj-q4.pdf",
-        "pattern": "Doanh\\s+thu\\s+thuan\\D+(\\d+[.,]?\\d+)"
-      }
-    ]
+    "stores": {
+      "entries": [],
+      "discover": []
+    },
+    "rev": {
+      "entries": [],
+      "discover": []
+    }
   },
   "MWG": {
-    "stores": [],
-    "rev": []
+    "stores": { "entries": [], "discover": [] },
+    "rev": { "entries": [], "discover": [] }
   },
   "HPG": {
-    "steel_volume": [],
-    "rev": []
+    "steel_volume": { "entries": [], "discover": [] },
+    "rev": { "entries": [], "discover": [] }
   },
   "TCB": {
-    "credit_yoy": [],
-    "rev": []
+    "credit_yoy": { "entries": [], "discover": [] },
+    "rev": { "entries": [], "discover": [] }
   }
 }

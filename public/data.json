@@ -1,0 +1,789 @@
+{
+  "asOf": "2025Q4",
+  "companies": [
+    {
+      "ticker": "PNJ",
+      "name": "Vang bac Da quy Phu Nhuan",
+      "kpis": [
+        {
+          "key": "stores",
+          "label": "So cua hang",
+          "unit": "cua hang",
+          "isRate": false,
+          "agg": "last",
+          "desc": "Tong so cua hang cuoi ky.",
+          "sources": [
+            {
+              "title": "PNJ — BCTC/IR"
+            }
+          ],
+          "series": [
+            {
+              "period": "2021Q1",
+              "value": null
+            },
+            {
+              "period": "2021Q2",
+              "value": null
+            },
+            {
+              "period": "2021Q3",
+              "value": null
+            },
+            {
+              "period": "2021Q4",
+              "value": null
+            },
+            {
+              "period": "2022Q1",
+              "value": null
+            },
+            {
+              "period": "2022Q2",
+              "value": null
+            },
+            {
+              "period": "2022Q3",
+              "value": null
+            },
+            {
+              "period": "2022Q4",
+              "value": null
+            },
+            {
+              "period": "2023Q1",
+              "value": null
+            },
+            {
+              "period": "2023Q2",
+              "value": null
+            },
+            {
+              "period": "2023Q3",
+              "value": null
+            },
+            {
+              "period": "2023Q4",
+              "value": null
+            },
+            {
+              "period": "2024Q1",
+              "value": null
+            },
+            {
+              "period": "2024Q2",
+              "value": null
+            },
+            {
+              "period": "2024Q3",
+              "value": null
+            },
+            {
+              "period": "2024Q4",
+              "value": null
+            },
+            {
+              "period": "2025Q1",
+              "value": null
+            },
+            {
+              "period": "2025Q2",
+              "value": null
+            },
+            {
+              "period": "2025Q3",
+              "value": null
+            },
+            {
+              "period": "2025Q4",
+              "value": null
+            }
+          ]
+        },
+        {
+          "key": "rev",
+          "label": "Doanh thu thuan",
+          "unit": "ty VND",
+          "isRate": false,
+          "agg": "sum",
+          "desc": "Doanh thu thuan theo ky.",
+          "sources": [
+            {
+              "title": "PNJ — BCTC hop nhat (KQKD)"
+            }
+          ],
+          "series": [
+            {
+              "period": "2021Q1",
+              "value": null
+            },
+            {
+              "period": "2021Q2",
+              "value": null
+            },
+            {
+              "period": "2021Q3",
+              "value": null
+            },
+            {
+              "period": "2021Q4",
+              "value": null
+            },
+            {
+              "period": "2022Q1",
+              "value": null
+            },
+            {
+              "period": "2022Q2",
+              "value": null
+            },
+            {
+              "period": "2022Q3",
+              "value": null
+            },
+            {
+              "period": "2022Q4",
+              "value": null
+            },
+            {
+              "period": "2023Q1",
+              "value": null
+            },
+            {
+              "period": "2023Q2",
+              "value": null
+            },
+            {
+              "period": "2023Q3",
+              "value": null
+            },
+            {
+              "period": "2023Q4",
+              "value": null
+            },
+            {
+              "period": "2024Q1",
+              "value": null
+            },
+            {
+              "period": "2024Q2",
+              "value": null
+            },
+            {
+              "period": "2024Q3",
+              "value": null
+            },
+            {
+              "period": "2024Q4",
+              "value": null
+            },
+            {
+              "period": "2025Q1",
+              "value": null
+            },
+            {
+              "period": "2025Q2",
+              "value": null
+            },
+            {
+              "period": "2025Q3",
+              "value": null
+            },
+            {
+              "period": "2025Q4",
+              "value": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ticker": "MWG",
+      "name": "The Gioi Di Dong",
+      "kpis": [
+        {
+          "key": "stores",
+          "label": "So cua hang",
+          "unit": "cua hang",
+          "isRate": false,
+          "agg": "last",
+          "desc": "Tong so diem ban cuoi ky.",
+          "sources": [
+            {
+              "title": "MWG — BCTC/IR"
+            }
+          ],
+          "series": [
+            {
+              "period": "2021Q1",
+              "value": null
+            },
+            {
+              "period": "2021Q2",
+              "value": null
+            },
+            {
+              "period": "2021Q3",
+              "value": null
+            },
+            {
+              "period": "2021Q4",
+              "value": null
+            },
+            {
+              "period": "2022Q1",
+              "value": null
+            },
+            {
+              "period": "2022Q2",
+              "value": null
+            },
+            {
+              "period": "2022Q3",
+              "value": null
+            },
+            {
+              "period": "2022Q4",
+              "value": null
+            },
+            {
+              "period": "2023Q1",
+              "value": null
+            },
+            {
+              "period": "2023Q2",
+              "value": null
+            },
+            {
+              "period": "2023Q3",
+              "value": null
+            },
+            {
+              "period": "2023Q4",
+              "value": null
+            },
+            {
+              "period": "2024Q1",
+              "value": null
+            },
+            {
+              "period": "2024Q2",
+              "value": null
+            },
+            {
+              "period": "2024Q3",
+              "value": null
+            },
+            {
+              "period": "2024Q4",
+              "value": null
+            },
+            {
+              "period": "2025Q1",
+              "value": null
+            },
+            {
+              "period": "2025Q2",
+              "value": null
+            },
+            {
+              "period": "2025Q3",
+              "value": null
+            },
+            {
+              "period": "2025Q4",
+              "value": null
+            }
+          ]
+        },
+        {
+          "key": "rev",
+          "label": "Doanh thu thuan",
+          "unit": "ty VND",
+          "isRate": false,
+          "agg": "sum",
+          "desc": "Doanh thu thuan theo ky.",
+          "sources": [
+            {
+              "title": "MWG — BCTC hop nhat (KQKD)"
+            }
+          ],
+          "series": [
+            {
+              "period": "2021Q1",
+              "value": null
+            },
+            {
+              "period": "2021Q2",
+              "value": null
+            },
+            {
+              "period": "2021Q3",
+              "value": null
+            },
+            {
+              "period": "2021Q4",
+              "value": null
+            },
+            {
+              "period": "2022Q1",
+              "value": null
+            },
+            {
+              "period": "2022Q2",
+              "value": null
+            },
+            {
+              "period": "2022Q3",
+              "value": null
+            },
+            {
+              "period": "2022Q4",
+              "value": null
+            },
+            {
+              "period": "2023Q1",
+              "value": null
+            },
+            {
+              "period": "2023Q2",
+              "value": null
+            },
+            {
+              "period": "2023Q3",
+              "value": null
+            },
+            {
+              "period": "2023Q4",
+              "value": null
+            },
+            {
+              "period": "2024Q1",
+              "value": null
+            },
+            {
+              "period": "2024Q2",
+              "value": null
+            },
+            {
+              "period": "2024Q3",
+              "value": null
+            },
+            {
+              "period": "2024Q4",
+              "value": null
+            },
+            {
+              "period": "2025Q1",
+              "value": null
+            },
+            {
+              "period": "2025Q2",
+              "value": null
+            },
+            {
+              "period": "2025Q3",
+              "value": null
+            },
+            {
+              "period": "2025Q4",
+              "value": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ticker": "HPG",
+      "name": "Tap doan Hoa Phat",
+      "kpis": [
+        {
+          "key": "steel_volume",
+          "label": "San luong thep ban",
+          "unit": "trieu tan",
+          "isRate": false,
+          "agg": "sum",
+          "desc": "San luong thep theo ky.",
+          "sources": [
+            {
+              "title": "HPG — IR san luong/quy"
+            }
+          ],
+          "series": [
+            {
+              "period": "2021Q1",
+              "value": null
+            },
+            {
+              "period": "2021Q2",
+              "value": null
+            },
+            {
+              "period": "2021Q3",
+              "value": null
+            },
+            {
+              "period": "2021Q4",
+              "value": null
+            },
+            {
+              "period": "2022Q1",
+              "value": null
+            },
+            {
+              "period": "2022Q2",
+              "value": null
+            },
+            {
+              "period": "2022Q3",
+              "value": null
+            },
+            {
+              "period": "2022Q4",
+              "value": null
+            },
+            {
+              "period": "2023Q1",
+              "value": null
+            },
+            {
+              "period": "2023Q2",
+              "value": null
+            },
+            {
+              "period": "2023Q3",
+              "value": null
+            },
+            {
+              "period": "2023Q4",
+              "value": null
+            },
+            {
+              "period": "2024Q1",
+              "value": null
+            },
+            {
+              "period": "2024Q2",
+              "value": null
+            },
+            {
+              "period": "2024Q3",
+              "value": null
+            },
+            {
+              "period": "2024Q4",
+              "value": null
+            },
+            {
+              "period": "2025Q1",
+              "value": null
+            },
+            {
+              "period": "2025Q2",
+              "value": null
+            },
+            {
+              "period": "2025Q3",
+              "value": null
+            },
+            {
+              "period": "2025Q4",
+              "value": null
+            }
+          ]
+        },
+        {
+          "key": "rev",
+          "label": "Doanh thu thuan",
+          "unit": "ty VND",
+          "isRate": false,
+          "agg": "sum",
+          "desc": "Doanh thu thuan theo ky.",
+          "sources": [
+            {
+              "title": "HPG — BCTC hop nhat (KQKD)"
+            }
+          ],
+          "series": [
+            {
+              "period": "2021Q1",
+              "value": null
+            },
+            {
+              "period": "2021Q2",
+              "value": null
+            },
+            {
+              "period": "2021Q3",
+              "value": null
+            },
+            {
+              "period": "2021Q4",
+              "value": null
+            },
+            {
+              "period": "2022Q1",
+              "value": null
+            },
+            {
+              "period": "2022Q2",
+              "value": null
+            },
+            {
+              "period": "2022Q3",
+              "value": null
+            },
+            {
+              "period": "2022Q4",
+              "value": null
+            },
+            {
+              "period": "2023Q1",
+              "value": null
+            },
+            {
+              "period": "2023Q2",
+              "value": null
+            },
+            {
+              "period": "2023Q3",
+              "value": null
+            },
+            {
+              "period": "2023Q4",
+              "value": null
+            },
+            {
+              "period": "2024Q1",
+              "value": null
+            },
+            {
+              "period": "2024Q2",
+              "value": null
+            },
+            {
+              "period": "2024Q3",
+              "value": null
+            },
+            {
+              "period": "2024Q4",
+              "value": null
+            },
+            {
+              "period": "2025Q1",
+              "value": null
+            },
+            {
+              "period": "2025Q2",
+              "value": null
+            },
+            {
+              "period": "2025Q3",
+              "value": null
+            },
+            {
+              "period": "2025Q4",
+              "value": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ticker": "TCB",
+      "name": "Techcombank",
+      "kpis": [
+        {
+          "key": "credit_yoy",
+          "label": "Tang truong tin dung (YoY)",
+          "unit": "%",
+          "isRate": true,
+          "agg": "avg",
+          "desc": "Tang truong du no cho vay so voi cung ky.",
+          "sources": [
+            {
+              "title": "TCB — BCTC/IR (du no cho vay)"
+            }
+          ],
+          "series": [
+            {
+              "period": "2021Q1",
+              "value": null
+            },
+            {
+              "period": "2021Q2",
+              "value": null
+            },
+            {
+              "period": "2021Q3",
+              "value": null
+            },
+            {
+              "period": "2021Q4",
+              "value": null
+            },
+            {
+              "period": "2022Q1",
+              "value": null
+            },
+            {
+              "period": "2022Q2",
+              "value": null
+            },
+            {
+              "period": "2022Q3",
+              "value": null
+            },
+            {
+              "period": "2022Q4",
+              "value": null
+            },
+            {
+              "period": "2023Q1",
+              "value": null
+            },
+            {
+              "period": "2023Q2",
+              "value": null
+            },
+            {
+              "period": "2023Q3",
+              "value": null
+            },
+            {
+              "period": "2023Q4",
+              "value": null
+            },
+            {
+              "period": "2024Q1",
+              "value": null
+            },
+            {
+              "period": "2024Q2",
+              "value": null
+            },
+            {
+              "period": "2024Q3",
+              "value": null
+            },
+            {
+              "period": "2024Q4",
+              "value": null
+            },
+            {
+              "period": "2025Q1",
+              "value": null
+            },
+            {
+              "period": "2025Q2",
+              "value": null
+            },
+            {
+              "period": "2025Q3",
+              "value": null
+            },
+            {
+              "period": "2025Q4",
+              "value": null
+            }
+          ]
+        },
+        {
+          "key": "rev",
+          "label": "Tong thu nhap hoat dong",
+          "unit": "ty VND",
+          "isRate": false,
+          "agg": "sum",
+          "desc": "Tong thu nhap hoat dong theo ky.",
+          "sources": [
+            {
+              "title": "TCB — BCTC/IR"
+            }
+          ],
+          "series": [
+            {
+              "period": "2021Q1",
+              "value": null
+            },
+            {
+              "period": "2021Q2",
+              "value": null
+            },
+            {
+              "period": "2021Q3",
+              "value": null
+            },
+            {
+              "period": "2021Q4",
+              "value": null
+            },
+            {
+              "period": "2022Q1",
+              "value": null
+            },
+            {
+              "period": "2022Q2",
+              "value": null
+            },
+            {
+              "period": "2022Q3",
+              "value": null
+            },
+            {
+              "period": "2022Q4",
+              "value": null
+            },
+            {
+              "period": "2023Q1",
+              "value": null
+            },
+            {
+              "period": "2023Q2",
+              "value": null
+            },
+            {
+              "period": "2023Q3",
+              "value": null
+            },
+            {
+              "period": "2023Q4",
+              "value": null
+            },
+            {
+              "period": "2024Q1",
+              "value": null
+            },
+            {
+              "period": "2024Q2",
+              "value": null
+            },
+            {
+              "period": "2024Q3",
+              "value": null
+            },
+            {
+              "period": "2024Q4",
+              "value": null
+            },
+            {
+              "period": "2025Q1",
+              "value": null
+            },
+            {
+              "period": "2025Q2",
+              "value": null
+            },
+            {
+              "period": "2025Q3",
+              "value": null
+            },
+            {
+              "period": "2025Q4",
+              "value": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

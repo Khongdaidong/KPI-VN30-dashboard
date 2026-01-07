@@ -1,37 +1,29 @@
 /**
- * Script: scrape-official.js
- * Goal: fetch official filings (PDF/HTML), extract KPI values by regex, and emit public/data.json
- * Usage:
- *   node scripts/scrape-official.js data/official-sources.json
+ * scrape-official.js
+ * Fetches PDFs/HTML from official sources, extracts KPI values, and writes public/data.json
+ *
+ * Usage: node scripts/scrape-official.js data/official-sources.json
  *
  * Config schema (official-sources.json):
  * {
  *   "asOf": "2025Q4",
  *   "PNJ": {
- *     "stores": [
- *       { "period": "2025Q4", "url": "https://...", "pattern": "Số\\s+cửa\\s+hàng\\D+(\\d+[.,]?\\d*)" }
- *     ],
- *     "rev": [
- *       { "period": "2025Q4", "url": "https://...", "pattern": "Doanh thu thuần\\D+(\\d+[.,]?\\d+)" }
- *     ]
+ *     "stores": {
+ *       "entries": [
+ *         { "period": "2025Q4", "url": "https://...", "pattern": "So\\s+cua\\s+hang\\D+(\\d+[.,]?\\d*)" }
+ *       ],
+ *       "discover": [
+ *         { "listUrl": "https://...", "linkPattern": "(PNJ[^\\s]*2025Q[1-4][^\\s]*\\.pdf)", "periodGroup": 0, "valuePattern": "So cua hang\\D+(\\d+[.,]?\\d*)" }
+ *       ]
+ *     },
+ *     "rev": { "entries": [...], "discover": [...] }
  *   },
- *   "MWG": { ... },
- *   "HPG": { ... },
- *   "TCB": {
- *     "credit_yoy": [
- *       { "period": "2025Q4", "url": "https://...", "pattern": "(?i)credit growth[^\\d-]*([-+]?[\\d.,]+)" }
- *     ],
- *     "rev": [...]
- *   }
+ *   "MWG": { ... }, "HPG": { ... }, "TCB": { ... }
  * }
  *
- * Notes:
- * - For PDFs, we extract text via pdf-parse and apply the regex pattern to the flattened text.
- * - For HTML, we strip tags and apply the regex to text content.
- * - Numbers are parsed with locale-aware cleanup (commas vs dots).
- * - Missing periods are left null in the final dataset.
- *
- * This is a guided scraper: you provide the URLs and regexes per period; the script handles download, parse, and assembly.
+ * - entries: explicit period/url/pattern
+ * - discover: crawl a listing page, match PDF links by linkPattern, map period from captured group, use valuePattern on the PDF/HTML
+ * - Numbers are parsed locale-agnostic (commas/dots).
  */
 
 const fs = require("fs");
@@ -63,9 +55,7 @@ const PERIODS_Q = [
 
 async function fetchBuffer(url) {
   const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch ${url}: ${res.status} ${res.statusText}`);
-  }
+  if (!res.ok) throw new Error(`Fetch failed ${res.status} ${res.statusText}`);
   const arrBuf = await res.arrayBuffer();
   return Buffer.from(arrBuf);
 }
@@ -77,66 +67,90 @@ function isPdf(url) {
 function normalizeNumber(str) {
   if (!str) return null;
   const cleaned = String(str).replace(/[^\d,.\-]/g, "");
-  // If it has both , and ., assume , is thousand sep and . is decimal.
-  if (cleaned.includes(",") && cleaned.includes(".")) {
-    return Number(cleaned.replace(/,/g, ""));
-  }
-  // If only commas, assume commas are thousand sep.
-  if (cleaned.includes(",") && !cleaned.includes(".")) {
-    return Number(cleaned.replace(/,/g, "."));
-  }
+  if (cleaned.includes(",") && cleaned.includes(".")) return Number(cleaned.replace(/,/g, ""));
+  if (cleaned.includes(",") && !cleaned.includes(".")) return Number(cleaned.replace(/,/g, "."));
   return Number(cleaned);
 }
 
 async function extractValue({ url, pattern }) {
   const buf = await fetchBuffer(url);
-
   let text = "";
   if (isPdf(url)) {
     const parsed = await pdfParse(buf);
     text = parsed.text || "";
   } else {
     text = buf.toString("utf8");
-    // strip HTML tags
     text = text.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<style[\s\S]*?<\/style>/gi, "");
     text = text.replace(/<[^>]+>/g, " ");
   }
-
   const regex = new RegExp(pattern, "i");
   const match = text.match(regex);
   if (!match) return null;
   return normalizeNumber(match[1]);
 }
 
+function toAbsolute(href, baseUrl) {
+  try {
+    return new URL(href, baseUrl).toString();
+  } catch {
+    return href;
+  }
+}
+
+async function discoverEntries(discoverCfg = []) {
+  const entries = [];
+  for (const d of discoverCfg) {
+    const { listUrl, linkPattern, periodGroup = 1, max = 6, valuePattern } = d;
+    if (!listUrl || !linkPattern || !valuePattern) continue;
+    try {
+      const htmlBuf = await fetchBuffer(listUrl);
+      const text = htmlBuf.toString("utf8");
+      const linkRegex = new RegExp(linkPattern, "ig");
+      const seen = new Set();
+      let match;
+      while ((match = linkRegex.exec(text)) !== null) {
+        const href = match[0];
+        const abs = toAbsolute(href, listUrl);
+        const periodToken = (match[periodGroup] || "").toString().toUpperCase();
+        const normalized = periodToken.replace(/[^0-9Q]/g, "");
+        if (PERIODS_Q.includes(normalized) && !seen.has(normalized)) {
+          entries.push({ period: normalized, url: abs, pattern: valuePattern });
+          seen.add(normalized);
+        }
+        if (entries.length >= max) break;
+      }
+    } catch (e) {
+      console.warn(`[warn] discover failed ${listUrl}: ${e.message}`);
+    }
+  }
+  return entries;
+}
+
 function blankSeries() {
   return PERIODS_Q.map((p) => ({ period: p, value: null }));
 }
 
-function ensureTickerBlock(config, ticker) {
-  return (config && config[ticker]) || {};
-}
-
-function buildCompany(ticker, name, kpis, rawCfg) {
+function buildCompany(kpis, rawCfg) {
   const out = [];
   for (const kpi of kpis) {
-    const cfgEntries = rawCfg[kpi.key] || [];
-    const series = blankSeries();
+    const cfgBlock = rawCfg[kpi.key] || {};
+    const explicit = cfgBlock.entries || [];
+    const discover = cfgBlock.discover || [];
     out.push({
-      key: kpi.key,
-      label: kpi.label,
-      unit: kpi.unit,
-      isRate: kpi.isRate,
-      agg: kpi.agg,
-      desc: kpi.desc,
-      sources: kpi.sources,
-      series,
-      _cfg: cfgEntries,
+      ...kpi,
+      series: blankSeries(),
+      _cfg: [...explicit],
+      _discover: discover,
     });
   }
   return out;
 }
 
 async function hydrateSeries(kpi) {
+  if (!kpi._cfg.length && kpi._discover?.length) {
+    const discovered = await discoverEntries(kpi._discover);
+    kpi._cfg.push(...discovered);
+  }
   for (const entry of kpi._cfg) {
     const { period, url, pattern } = entry;
     if (!PERIODS_Q.includes(period)) continue;
@@ -145,12 +159,13 @@ async function hydrateSeries(kpi) {
       const v = await extractValue({ url, pattern });
       const target = kpi.series.find((x) => x.period === period);
       if (target) target.value = v;
-      console.log(`✓ ${kpi.key} ${period} <- ${v ?? "null"} from ${url}`);
+      console.log(`[ok] ${kpi.key} ${period} <- ${v ?? "null"} from ${url}`);
     } catch (e) {
-      console.warn(`✗ ${kpi.key} ${period} failed: ${e.message}`);
+      console.warn(`[warn] ${kpi.key} ${period} failed: ${e.message}`);
     }
   }
   delete kpi._cfg;
+  delete kpi._discover;
 }
 
 function datasetTemplate(asOf) {
@@ -267,12 +282,10 @@ async function main() {
   const ds = datasetTemplate(rawCfg.asOf);
 
   for (const company of ds.companies) {
-    const cfg = ensureTickerBlock(rawCfg, company.ticker);
-    const hydrated = buildCompany(company.ticker, company.name, company.kpis, cfg);
-    company.kpis = hydrated;
+    const cfg = rawCfg[company.ticker] || {};
+    company.kpis = buildCompany(company.kpis, cfg);
   }
 
-  // hydrate values
   for (const company of ds.companies) {
     for (const kpi of company.kpis) {
       await hydrateSeries(kpi);

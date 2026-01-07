@@ -42,6 +42,7 @@ import {
   yoyLabelForKPI,
   getLatestNonNull,
 } from "@/lib/kpi";
+import dataJson from "../../public/data.json";
 
 type KpiSource = NonNullable<Dataset["companies"][number]["kpis"][number]["sources"]>[number];
 
@@ -54,6 +55,8 @@ type ChartPayload = {
 type View = "chart" | "table" | "compare" | "import";
 
 type RechartsValue = number | string | (number | string)[];
+
+const defaultDataset: Dataset = (dataJson as Dataset) || buildDemoDataset();
 
 function KPIInfo({ text }: { text: string }) {
   return (
@@ -185,7 +188,7 @@ function StatCard({
 }
 
 export default function VnKpiDashboard() {
-  const [data, setData] = useState<Dataset>(() => buildDemoDataset());
+  const [data, setData] = useState<Dataset>(() => defaultDataset);
 
   const [ticker, setTicker] = useState<CompanyData["ticker"]>("PNJ");
   const [view, setView] = useState<View>("chart");
@@ -274,7 +277,7 @@ export default function VnKpiDashboard() {
     });
   }, [data.companies, primaryKpiKey, granularity]);
 
-  const [importText, setImportText] = useState<string>(() => JSON.stringify(buildDemoDataset(), null, 2));
+  const [importText, setImportText] = useState<string>(() => JSON.stringify(defaultDataset, null, 2));
   const [importErr, setImportErr] = useState<string>("");
 
   function applyImport() {
@@ -304,7 +307,7 @@ export default function VnKpiDashboard() {
   }
 
   function resetDemo() {
-    const ds = buildDemoDataset();
+    const ds = defaultDataset;
     setData(ds);
     setImportText(JSON.stringify(ds, null, 2));
     setImportErr("");
