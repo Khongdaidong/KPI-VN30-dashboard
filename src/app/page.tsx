@@ -56,7 +56,13 @@ type View = "chart" | "table" | "compare" | "import";
 
 type RechartsValue = number | string | (number | string)[];
 
-const defaultDataset: Dataset = (dataJson as Dataset) || buildDemoDataset();
+const seededDataset = dataJson as Dataset;
+const hasSeedValues =
+  !!seededDataset?.companies?.length &&
+  seededDataset.companies.some((company) =>
+    company.kpis?.some((kpi) => kpi.series?.some((pt) => pt.value !== null && pt.value !== undefined))
+  );
+const defaultDataset: Dataset = hasSeedValues ? seededDataset : buildDemoDataset();
 
 function KPIInfo({ text }: { text: string }) {
   return (
