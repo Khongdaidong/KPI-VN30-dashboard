@@ -9,21 +9,22 @@
     "expandFromFirst": 120,
     "expandMax": 240,
     "ocrEnabled": false,
-    "ocrEngine": "cli",
+    "ocrEngine": "auto",
     "ocrMaxDocs": 6,
     "ocrMaxPages": 1,
     "ocrScale": 1.4,
-    "ocrLangs": "eng"
+    "ocrLangs": "eng+vie"
   },
   "PNJ": {
     "auto": {
       "debug": true,
       "ocrEnabled": true,
-      "ocrEngine": "cli",
+      "ocrEngine": "auto",
+      "ocrRotate": true,
       "ocrMaxDocs": 4,
-      "ocrMaxPages": 4,
-      "ocrScale": 1.4,
-      "ocrLangs": "eng"
+      "ocrMaxPages": 8,
+      "ocrScale": 2,
+      "ocrLangs": "eng+vie"
     },
     "stores": {
       "entries": [],
@@ -46,13 +47,13 @@
     "auto": {
       "debug": true,
       "ocrEnabled": true,
-      "ocrEngine": "cli",
+      "ocrEngine": "auto",
       "expandFromFirst": 200,
       "expandMax": 400,
       "ocrMaxDocs": 4,
-      "ocrMaxPages": 4,
+      "ocrMaxPages": 8,
       "ocrScale": 1.4,
-      "ocrLangs": "eng"
+      "ocrLangs": "eng+vie"
     },
     "credit_yoy": { "entries": [], "discover": [] },
     "rev": { "entries": [], "discover": [] }

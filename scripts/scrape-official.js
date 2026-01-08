@@ -32,7 +32,7 @@ const path = require("path");
 const os = require("os");
 const { spawnSync } = require("child_process");
 const { PDFParse } = require("pdf-parse");
-const { createCanvas, DOMMatrix, ImageData, Path2D } = require("@napi-rs/canvas");
+const { createCanvas, loadImage, DOMMatrix, ImageData, Path2D } = require("@napi-rs/canvas");
 const { createWorker } = require("tesseract.js");
 
 const PERIODS_Q = [
@@ -112,24 +112,42 @@ const KPI_PATTERNS = {
       "store\\s*network[^0-9]{0,20}([0-9][0-9.,\\s]+)",
       "number\\s*of\\s*stores[^0-9]{0,20}([0-9][0-9.,\\s]+)",
     ],
+    rowPatterns: [
+      "so\\s*cua\\s*hang",
+      "tong\\s*so\\s*cua\\s*hang",
+      "mang\\s*luoi\\s*cua\\s*hang",
+      "number\\s*of\\s*stores",
+      "store\\s*network",
+    ],
     unitKind: "count",
     minValue: 50,
     urlKeywords: ["cua-hang", "store", "store-network", "mang-luoi", "he-thong"],
+    ocrKeywords: ["cua hang", "store", "hang"],
   },
   rev: {
-    patterns: [
-      "doanh\\s*thu\\s*thuan[^0-9]{0,40}([0-9][0-9.,\\s]+)\\s*(ty|trieu|dong|vnd|usd|billion|million)?",
-      "doanh\\s*thu\\s*ban\\s*hang[^0-9]{0,40}([0-9][0-9.,\\s]+)\\s*(ty|trieu|dong|vnd|usd|billion|million)?",
-      "tong\\s*thu\\s*nhap\\s*hoat\\s*dong[^0-9]{0,40}([0-9][0-9.,\\s]+)\\s*(ty|trieu|dong|vnd|usd|billion|million)?",
-      "net\\s*revenue[^0-9]{0,40}([0-9][0-9.,\\s]+)\\s*(billion|million|vnd|usd)?",
-      "operating\\s*income[^0-9]{0,40}([0-9][0-9.,\\s]+)\\s*(billion|million|vnd|usd)?",
-      "total\\s*operating\\s*income[^0-9]{0,40}([0-9][0-9.,\\s]+)\\s*(billion|million|vnd|usd)?",
+    primaryPatterns: [
+      "doanh\\s*thu\\s*thuan[^0-9]{0,120}([0-9][0-9.,\\s]+)\\s*(ty|trieu|dong|vnd|usd|billion|million)?",
+      "tong\\s*thu\\s*nhap\\s*hoat\\s*dong[^0-9]{0,120}([0-9][0-9.,\\s]+)\\s*(ty|trieu|dong|vnd|usd|billion|million)?",
+      "net\\s*revenue[^0-9]{0,120}([0-9][0-9.,\\s]+)\\s*(billion|million|vnd|usd)?",
+      "total\\s*operating\\s*income[^0-9]{0,120}([0-9][0-9.,\\s]+)\\s*(billion|million|vnd|usd)?",
+    ],
+    fallbackPatterns: [
+      "doanh\\s*thu\\s*ban\\s*hang[^0-9]{0,120}([0-9][0-9.,\\s]+)\\s*(ty|trieu|dong|vnd|usd|billion|million)?",
+      "operating\\s*income[^0-9]{0,120}([0-9][0-9.,\\s]+)\\s*(billion|million|vnd|usd)?",
+    ],
+    rowPatterns: [
+      "doanh\\s*thu\\s*thuan",
+      "tong\\s*thu\\s*nhap\\s*hoat\\s*dong",
+      "net\\s*revenue",
+      "total\\s*operating\\s*income",
+      "doanh\\s*thu\\s*ban\\s*hang",
     ],
     unitKind: "currency",
     minValue: 100,
     maxValue: 60000,
     urlKeywords: ["bctc", "bao-cao-tai-chinh", "financial", "report", "kqkd"],
     requiresPdf: true,
+    ocrKeywords: ["doanh thu", "doanh thu thuan", "revenue", "thu nhap"],
   },
   steel_volume: {
     patterns: [
@@ -137,9 +155,11 @@ const KPI_PATTERNS = {
       "san\\s*luong\\s*thep[^0-9]{0,40}([0-9][0-9.,\\s]+)\\s*(trieu|nghin|tan|ton|tons|million|thousand)?",
       "steel\\s*sales\\s*volume[^0-9]{0,40}([0-9][0-9.,\\s]+)\\s*(million|thousand|ton|tons)?",
     ],
+    rowPatterns: ["san\\s*luong\\s*thep\\s*ban", "san\\s*luong\\s*thep", "steel\\s*sales\\s*volume"],
     unitKind: "volume",
     minValue: 0.1,
     urlKeywords: ["san-luong", "steel", "volume"],
+    ocrKeywords: ["san luong", "thep", "steel", "tan"],
   },
   credit_yoy: {
     patterns: [
@@ -149,10 +169,18 @@ const KPI_PATTERNS = {
       "credit\\s*growth[^0-9%]{0,20}([0-9][0-9.,\\s]+)\\s*%?",
       "loan\\s*growth[^0-9%]{0,20}([0-9][0-9.,\\s]+)\\s*%?",
     ],
+    rowPatterns: [
+      "tang\\s*truong\\s*tin\\s*dung",
+      "tang\\s*truong\\s*du\\s*no",
+      "tang\\s*truong\\s*cho\\s*vay",
+      "credit\\s*growth",
+      "loan\\s*growth",
+    ],
     unitKind: "percent",
     isRate: true,
-    minValue: 0.005,
+    minValue: -0.2,
     urlKeywords: ["bao-cao", "kqkd", "tai-chinh", "ket-qua-kinh-doanh", "tin-dung", "credit", "loan"],
+    ocrKeywords: ["tin dung", "credit", "loan"],
   },
 };
 
@@ -304,6 +332,34 @@ async function renderPdfPages(buffer, opts = {}) {
   return pages;
 }
 
+async function rotateImageBuffer(imageBuffer, angle) {
+  if (!angle) return imageBuffer;
+  const img = await loadImage(imageBuffer);
+  const radians = (angle * Math.PI) / 180;
+  const swap = angle % 180 !== 0;
+  const width = swap ? img.height : img.width;
+  const height = swap ? img.width : img.height;
+  const canvas = createCanvas(width, height);
+  const ctx = canvas.getContext("2d");
+  ctx.translate(width / 2, height / 2);
+  ctx.rotate(radians);
+  ctx.drawImage(img, -img.width / 2, -img.height / 2);
+  return canvas.toBuffer("image/png");
+}
+
+function scoreOcrText(text, keywords = []) {
+  const folded = foldAscii(text);
+  const digitScore = Math.min(500, (folded.match(/\d/g) || []).length);
+  let keywordScore = 0;
+  for (const kw of keywords) {
+    if (folded.includes(kw)) {
+      const weight = Math.max(1, kw.trim().split(/\s+/).length);
+      keywordScore += weight;
+    }
+  }
+  return keywordScore * 1000 + digitScore;
+}
+
 async function ocrWithCli(pages, opts = {}) {
   const bin = findTesseractBinary();
   if (!bin) return null;
@@ -311,19 +367,40 @@ async function ocrWithCli(pages, opts = {}) {
     console.log(`[debug] ocr engine=cli bin=${bin} pages=${pages.length}`);
   }
   const langs = opts.langs || "eng";
+  const rotateAnglesRaw = Array.isArray(opts.rotateAngles) && opts.rotateAngles.length ? opts.rotateAngles : [0];
+  const rotateAngles = rotateAnglesRaw.includes(0) ? rotateAnglesRaw : [0, ...rotateAnglesRaw];
+  const keywords = opts.ocrKeywords || [];
+  const requireKeywords = opts.requireKeywords === true && keywords.length > 0;
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "kpi-ocr-"));
   let text = "";
 
   try {
     for (const page of pages) {
-      const imgPath = path.join(tmpDir, `page-${page.pageNum}.png`);
-      fs.writeFileSync(imgPath, page.image);
-      const args = [imgPath, "stdout", "-l", langs, "--psm", "6"];
-      const result = spawnSync(bin, args, { encoding: "utf8" });
-      if (result.status !== 0) {
-        throw new Error((result.stderr || "").trim() || "tesseract failed");
+      let bestText = "";
+      let bestScore = -1;
+      for (const angle of rotateAngles) {
+        const rotated = await rotateImageBuffer(page.image, angle);
+        const imgPath = path.join(tmpDir, `page-${page.pageNum}-${angle}.png`);
+        fs.writeFileSync(imgPath, rotated);
+        const args = [imgPath, "stdout", "-l", langs, "--psm", "6"];
+        const result = spawnSync(bin, args, { encoding: "utf8" });
+        if (result.status !== 0) {
+          throw new Error((result.stderr || "").trim() || "tesseract failed");
+        }
+        const outText = result.stdout || "";
+        const score = scoreOcrText(outText, keywords);
+        if (requireKeywords && score < 1000 && angle === 0) {
+          continue;
+        }
+        if (score > bestScore) {
+          bestScore = score;
+          bestText = outText;
+        }
+        if (angle === 0 && score >= 1000) {
+          break;
+        }
       }
-      text += `\n${result.stdout || ""}`;
+      text += `\n${bestText}`;
     }
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
@@ -356,17 +433,24 @@ async function ocrPdfBuffer(buffer, opts = {}) {
     console.log(`[debug] ocrPdfBuffer engine=${engine} pages=${pages.length}`);
   }
   const canUseCli = findTesseractBinary();
-  if (engine === "js") {
-    return ocrWithJs(pages, opts);
+  if (engine === "js") return ocrWithJs(pages, opts);
+  if (engine === "cli") {
+    if (!canUseCli) {
+      if (opts.debug) {
+        console.log("[debug] Tesseract CLI not found, falling back to JS OCR.");
+      }
+      return ocrWithJs(pages, opts);
+    }
+    const text = await ocrWithCli(pages, opts);
+    if (text === null) throw new Error("Tesseract CLI not available.");
+    return text;
   }
-  if (!canUseCli) {
-    throw new Error("Tesseract CLI not found.");
+  if (canUseCli) {
+    const text = await ocrWithCli(pages, opts);
+    if (text === null) throw new Error("Tesseract CLI not available.");
+    return text;
   }
-  const text = await ocrWithCli(pages, opts);
-  if (text === null) {
-    throw new Error("Tesseract CLI not available.");
-  }
-  return text;
+  return ocrWithJs(pages, opts);
 }
 
 function foldAscii(input) {
@@ -379,8 +463,12 @@ function foldAscii(input) {
 function normalizeNumber(str) {
   if (!str) return null;
   const cleaned = String(str).replace(/[^\d,.\-]/g, "");
-  if (cleaned.includes(",") && cleaned.includes(".")) return Number(cleaned.replace(/,/g, ""));
-  if (cleaned.includes(",") && !cleaned.includes(".")) return Number(cleaned.replace(/,/g, "."));
+  const dotCount = (cleaned.match(/\./g) || []).length;
+  const commaCount = (cleaned.match(/,/g) || []).length;
+  if (dotCount > 1 && commaCount === 0) return Number(cleaned.replace(/\./g, ""));
+  if (commaCount > 1 && dotCount === 0) return Number(cleaned.replace(/,/g, ""));
+  if (commaCount === 1 && dotCount === 0) return Number(cleaned.replace(/,/g, "."));
+  if (commaCount >= 1 && dotCount >= 1) return Number(cleaned.replace(/,/g, ""));
   return Number(cleaned);
 }
 
@@ -434,13 +522,26 @@ function normalizeByUnit(value, unitToken, context, unitKind) {
   return value;
 }
 
+function pickNumberToken(raw, unitKind) {
+  const tokens = String(raw || "").match(/[0-9][0-9.,]*/g);
+  if (!tokens || !tokens.length) return raw;
+  const minDigits =
+    unitKind === "currency" ? 6 : unitKind === "volume" ? 2 : unitKind === "percent" ? 1 : unitKind === "count" ? 1 : 1;
+  for (const token of tokens) {
+    const digits = token.replace(/[.,]/g, "").length;
+    if (digits >= minDigits) return token;
+  }
+  return tokens[0];
+}
+
 function extractValueFromText(foldedText, patterns, unitKind, minValue, maxValue, period, opts = {}) {
   const strictPeriod = opts.strictPeriod !== false;
   for (const pattern of patterns) {
     const regex = new RegExp(pattern, "ig");
     let match;
     while ((match = regex.exec(foldedText)) !== null) {
-      const raw = normalizeNumber(match[1]);
+      const token = pickNumberToken(match[1], unitKind);
+      const raw = normalizeNumber(token);
       const unitToken = match[2] || "";
       const normalized = normalizeByUnit(raw, unitToken, match[0], unitKind);
       if (normalized === null) continue;
@@ -448,6 +549,37 @@ function extractValueFromText(foldedText, patterns, unitKind, minValue, maxValue
       if (typeof maxValue === "number" && normalized > maxValue) continue;
       if (strictPeriod && !hasPeriodNearMatch(foldedText, match.index, period)) continue;
       return normalized;
+    }
+  }
+  return null;
+}
+
+function splitTextLines(text) {
+  return String(text || "")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+}
+
+function extractValueFromLines(lines, rowPatterns, unitKind, minValue, maxValue) {
+  if (!lines || !lines.length || !rowPatterns || !rowPatterns.length) return null;
+  const regexes = rowPatterns.map((p) => new RegExp(p, "i"));
+  for (const line of lines) {
+    const folded = foldAscii(line).replace(/\s+/g, " ");
+    for (const regex of regexes) {
+      const match = regex.exec(folded);
+      if (!match) continue;
+      const after = folded.slice(match.index + match[0].length);
+      const tokens = after.match(/[0-9][0-9.,]*/g);
+      if (!tokens || !tokens.length) continue;
+      for (const token of tokens) {
+        const raw = normalizeNumber(token);
+        const normalized = normalizeByUnit(raw, "", after, unitKind);
+        if (normalized === null) continue;
+        if (typeof minValue === "number" && normalized < minValue) continue;
+        if (typeof maxValue === "number" && normalized > maxValue) continue;
+        return normalized;
+      }
     }
   }
   return null;
@@ -545,6 +677,21 @@ function extractLinksFromHtml(htmlText, baseUrl, maxLinks) {
       out.push(abs);
       nonPdfCount += 1;
     }
+  }
+  return out;
+}
+
+function extractLinkEntriesFromHtml(htmlText, baseUrl, maxLinks) {
+  const out = [];
+  const limit = maxLinks || 400;
+  const regex = /<a\s+[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
+  let match;
+  while ((match = regex.exec(htmlText)) !== null) {
+    const href = match[1];
+    const text = match[2].replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+    const url = toAbsolute(href, baseUrl);
+    out.push({ url, text });
+    if (out.length >= limit) break;
   }
   return out;
 }
@@ -665,6 +812,48 @@ function dedupe(list) {
   return out;
 }
 
+function dedupeEntries(list) {
+  const out = [];
+  const seen = new Set();
+  for (const item of list) {
+    if (!item || !item.url) continue;
+    if (seen.has(item.url)) continue;
+    seen.add(item.url);
+    out.push(item);
+  }
+  return out;
+}
+
+function scoreCandidate(item, kpiKey) {
+  let score = scoreUrl(item.url, kpiKey);
+  const text = foldAscii(item.text || "");
+  if (!text) return score;
+  const baseKeywords = [
+    "bao cao",
+    "bctc",
+    "financial",
+    "report",
+    "kqkd",
+    "ket qua kinh doanh",
+    "quan he co dong",
+    "investor",
+    "ir",
+    "quarter",
+    "quy",
+  ];
+  const kpiKeywords = {
+    stores: ["cua hang", "store"],
+    rev: ["doanh thu", "revenue", "thu nhap"],
+    steel_volume: ["san luong", "thep", "steel"],
+    credit_yoy: ["tin dung", "credit", "loan"],
+  };
+  if (text.match(/20(21|22|23|24|25)/)) score += 2;
+  if (text.match(/\bq[1-4]\b/) || text.includes("quy")) score += 2;
+  for (const k of baseKeywords) if (text.includes(k)) score += 2;
+  for (const k of kpiKeywords[kpiKey] || []) if (text.includes(k)) score += 2;
+  return score;
+}
+
 function blankSeries() {
   return PERIODS_Q.map((p) => ({ period: p, value: null }));
 }
@@ -705,13 +894,13 @@ async function autoFillSeries(kpi) {
   let candidates = [];
   if (sitemaps.length) {
     const urls = await fetchSitemapUrls(sitemaps, maxSitemapUrls);
-    candidates = candidates.concat(urls);
+    candidates = candidates.concat(urls.map((url) => ({ url, text: "" })));
   }
   for (const page of listPages) {
     try {
       const buf = await fetchBuffer(page);
       const html = buf.toString("utf8");
-      const links = extractLinksFromHtml(html, page, maxListLinks);
+      const links = extractLinkEntriesFromHtml(html, page, maxListLinks);
       candidates = candidates.concat(links);
     } catch (e) {
       console.warn(`[warn] list page failed ${page}: ${e.message}`);
@@ -722,19 +911,19 @@ async function autoFillSeries(kpi) {
   const expandFromFirst = autoCfg.expandFromFirst || 120;
   const expandMax = autoCfg.expandMax || 240;
   if (expandPdf && candidates.length) {
-    const htmlCandidates = candidates.filter((url) => !isPdf(url)).slice(0, expandFromFirst);
+    const htmlCandidates = candidates.filter((item) => !isPdf(item.url)).slice(0, expandFromFirst);
     const extra = [];
-    for (const url of htmlCandidates) {
+    for (const item of htmlCandidates) {
       try {
-        const doc = await fetchDocument(url);
+        const doc = await fetchDocument(item.url);
         if (doc.isPdf || !doc.html) continue;
-        const links = extractLinksFromHtml(doc.html, url, expandMax);
+        const links = extractLinkEntriesFromHtml(doc.html, item.url, expandMax);
         for (const link of links) {
-          if (isPdf(link)) extra.push(link);
+          if (isPdf(link.url)) extra.push(link);
         }
       } catch (e) {
         if (autoCfg.debug) {
-          console.warn(`[warn] expand links failed ${url}: ${e.message}`);
+          console.warn(`[warn] expand links failed ${item.url}: ${e.message}`);
         }
       }
       if (extra.length >= expandMax) break;
@@ -748,27 +937,28 @@ async function autoFillSeries(kpi) {
 
   const keywordList = (kpiMeta.urlKeywords || []).map((k) => foldAscii(k));
   if (keywordList.length) {
-    const filtered = candidates.filter((url) => {
-      const lower = foldAscii(url);
-      return keywordList.some((k) => lower.includes(k));
+    const filtered = candidates.filter((item) => {
+      const lower = foldAscii(item.url);
+      const text = foldAscii(item.text || "");
+      return keywordList.some((k) => lower.includes(k) || text.includes(k));
     });
     if (filtered.length) candidates = filtered;
   }
 
   if (kpiMeta.requiresPdf) {
-    const filtered = candidates.filter((url) => url.toLowerCase().includes(".pdf"));
+    const filtered = candidates.filter((item) => item.url.toLowerCase().includes(".pdf"));
     if (filtered.length) candidates = filtered;
   }
 
-  const withPeriod = candidates.filter((url) => inferPeriodFromString(url));
+  const withPeriod = candidates.filter((item) => inferPeriodFromString(item.url) || inferPeriodFromString(item.text));
   if (withPeriod.length) candidates = withPeriod;
 
-  candidates = dedupe(candidates)
-    .map((url) => ({ url, score: scoreUrl(url, kpiKey) }))
+  candidates = dedupeEntries(candidates)
+    .map((item) => ({ ...item, score: scoreCandidate(item, kpiKey) }))
     .filter((item) => item.score >= 3)
     .sort((a, b) => b.score - a.score)
     .slice(0, maxDocs)
-    .map((item) => item.url);
+    .map((item) => ({ url: item.url, text: item.text }));
 
   const missing = new Set(kpi.series.filter((p) => p.value === null).map((p) => p.period));
   const ocrEnabled = autoCfg.ocr === true || autoCfg.ocrEnabled === true;
@@ -777,6 +967,7 @@ async function autoFillSeries(kpi) {
   const ocrMaxPages = autoCfg.ocrMaxPages || 2;
   const ocrScale = autoCfg.ocrScale || 1.6;
   const ocrLangs = autoCfg.ocrLangs || "eng+vie";
+  const ocrRequireKeywords = autoCfg.ocrRequireKeywords !== false;
   if (autoCfg.debug) {
     console.log(
       `[debug] ${kpi._ticker || ""} ${kpi.key} candidates=${candidates.length} ocrEnabled=${ocrEnabled} ocrLangs=${ocrLangs} ocrEngine=${ocrEngine}`
@@ -786,68 +977,116 @@ async function autoFillSeries(kpi) {
       console.log(`[debug] ocr cli bin=${cliBin || "none"}`);
     }
   }
-  for (const url of candidates) {
+  for (const item of candidates) {
     if (!missing.size) break;
+    const url = item.url;
     try {
       const periodFromUrl = inferPeriodFromString(url);
+      const periodFromText = inferPeriodFromString(item.text);
       if (periodFromUrl && !missing.has(periodFromUrl)) continue;
       const doc = await fetchDocument(url);
-      const period = periodFromUrl || inferPeriodFromText(doc.folded);
+      let period = periodFromUrl || periodFromText || inferPeriodFromText(doc.folded);
+      let ocrText = null;
+      let ocrFolded = null;
+      const ensureOcr = async () => {
+        if (!ocrEnabled || !doc.isPdf || ocrRemaining <= 0) return;
+        if (ocrText !== null) return;
+        console.log(`[ocr] ${kpi.key} ${period || "unknown"} from ${url}`);
+        ocrText = await ocrPdfBuffer(doc.buffer, {
+          maxPages: ocrMaxPages,
+          scale: ocrScale,
+          langs: ocrLangs,
+          engine: ocrEngine,
+          rotateAngles: autoCfg.ocrRotate ? [0, 90, 180, 270] : [0],
+          ocrKeywords: kpiMeta.ocrKeywords || [],
+          requireKeywords: ocrRequireKeywords,
+          debug: autoCfg.debug,
+        });
+        ocrRemaining -= 1;
+        ocrFolded = foldAscii(ocrText).replace(/\s+/g, " ");
+      };
+
+      if (!period && ocrEnabled && doc.isPdf) {
+        await ensureOcr();
+        if (ocrFolded) {
+          period = inferPeriodFromText(ocrFolded);
+        }
+      }
       if (!period || !missing.has(period)) continue;
+      const primaryPatterns = kpiMeta.primaryPatterns || kpiMeta.patterns;
+      const fallbackPatterns = kpiMeta.fallbackPatterns || [];
       let value = extractValueFromText(
         doc.folded,
-        kpiMeta.patterns,
+        primaryPatterns,
         kpiMeta.unitKind,
         kpiMeta.minValue,
         kpiMeta.maxValue,
         period,
         { strictPeriod: true }
       );
+      if (value === null && fallbackPatterns.length) {
+        value = extractValueFromText(
+          doc.folded,
+          fallbackPatterns,
+          kpiMeta.unitKind,
+          kpiMeta.minValue,
+          kpiMeta.maxValue,
+          period,
+          { strictPeriod: true }
+        );
+      }
       if (value === null && periodFromUrl) {
         value = extractValueFromText(
           doc.folded,
-          kpiMeta.patterns,
+          primaryPatterns,
           kpiMeta.unitKind,
           kpiMeta.minValue,
           kpiMeta.maxValue,
           period,
           { strictPeriod: false }
         );
-      }
-      if (value === null && ocrEnabled && doc.isPdf && ocrRemaining > 0) {
-        try {
-          console.log(`[ocr] ${kpi.key} ${period} from ${url}`);
-          const ocrText = await ocrPdfBuffer(doc.buffer, {
-            maxPages: ocrMaxPages,
-            scale: ocrScale,
-            langs: ocrLangs,
-            engine: ocrEngine,
-            debug: autoCfg.debug,
-          });
-          ocrRemaining -= 1;
-          const ocrFolded = foldAscii(ocrText).replace(/\s+/g, " ");
+        if (value === null && fallbackPatterns.length) {
           value = extractValueFromText(
-            ocrFolded,
-            kpiMeta.patterns,
+            doc.folded,
+            fallbackPatterns,
             kpiMeta.unitKind,
             kpiMeta.minValue,
             kpiMeta.maxValue,
             period,
-            { strictPeriod: true }
+            { strictPeriod: false }
           );
-          if (value === null && periodFromUrl) {
+        }
+      }
+      if (value === null && ocrEnabled && doc.isPdf && ocrRemaining > 0) {
+        try {
+          await ensureOcr();
+          if (ocrFolded) {
             value = extractValueFromText(
               ocrFolded,
-              kpiMeta.patterns,
+              primaryPatterns,
               kpiMeta.unitKind,
               kpiMeta.minValue,
               kpiMeta.maxValue,
               period,
               { strictPeriod: false }
             );
+            if (value === null && fallbackPatterns.length) {
+              value = extractValueFromText(
+                ocrFolded,
+                fallbackPatterns,
+                kpiMeta.unitKind,
+                kpiMeta.minValue,
+                kpiMeta.maxValue,
+                period,
+                { strictPeriod: false }
+              );
+            }
+          }
+          if (value === null && ocrText) {
+            const lines = splitTextLines(ocrText);
+            value = extractValueFromLines(lines, kpiMeta.rowPatterns, kpiMeta.unitKind, kpiMeta.minValue, kpiMeta.maxValue);
           }
         } catch (e) {
-          ocrRemaining -= 1;
           const msg = e && e.message ? e.message : String(e || "ocr failed");
           console.warn(`[warn] ocr ${kpi.key} failed ${url}: ${msg}`);
           if (autoCfg.debug && e && e.stack) {
@@ -1033,7 +1272,14 @@ async function main() {
   console.log(`\nSaved dataset -> ${outPath}`);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  normalizeNumber,
+  pickNumberToken,
+};
