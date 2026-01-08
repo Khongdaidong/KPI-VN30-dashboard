@@ -14,7 +14,7 @@
           "desc": "Tong so cua hang cuoi ky.",
           "sources": [
             {
-              "title": "PNJ — BCTC/IR"
+              "title": "PNJ BCTC/IR"
             }
           ],
           "series": [
@@ -109,7 +109,7 @@
           "desc": "Doanh thu thuan theo ky.",
           "sources": [
             {
-              "title": "PNJ — BCTC hop nhat (KQKD)"
+              "title": "PNJ BCTC hop nhat (KQKD)"
             }
           ],
           "series": [
@@ -187,7 +187,7 @@
             },
             {
               "period": "2025Q3",
-              "value": null
+              "value": 8235.605818836
             },
             {
               "period": "2025Q4",
@@ -210,7 +210,7 @@
           "desc": "Tong so diem ban cuoi ky.",
           "sources": [
             {
-              "title": "MWG — BCTC/IR"
+              "title": "MWG BCTC/IR"
             }
           ],
           "series": [
@@ -305,7 +305,7 @@
           "desc": "Doanh thu thuan theo ky.",
           "sources": [
             {
-              "title": "MWG — BCTC hop nhat (KQKD)"
+              "title": "MWG BCTC hop nhat (KQKD)"
             }
           ],
           "series": [
@@ -406,7 +406,7 @@
           "desc": "San luong thep theo ky.",
           "sources": [
             {
-              "title": "HPG — IR san luong/quy"
+              "title": "HPG IR san luong/quy"
             }
           ],
           "series": [
@@ -480,7 +480,7 @@
             },
             {
               "period": "2025Q2",
-              "value": null
+              "value": 2.6
             },
             {
               "period": "2025Q3",
@@ -501,7 +501,7 @@
           "desc": "Doanh thu thuan theo ky.",
           "sources": [
             {
-              "title": "HPG — BCTC hop nhat (KQKD)"
+              "title": "HPG BCTC hop nhat (KQKD)"
             }
           ],
           "series": [
@@ -602,7 +602,7 @@
           "desc": "Tang truong du no cho vay so voi cung ky.",
           "sources": [
             {
-              "title": "TCB — BCTC/IR (du no cho vay)"
+              "title": "TCB BCTC/IR (du no cho vay)"
             }
           ],
           "series": [
@@ -697,7 +697,7 @@
           "desc": "Tong thu nhap hoat dong theo ky.",
           "sources": [
             {
-              "title": "TCB — BCTC/IR"
+              "title": "TCB BCTC/IR"
             }
           ],
           "series": [
