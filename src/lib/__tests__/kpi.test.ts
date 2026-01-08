@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import type { KPI } from "../kpi";
 import {
   formatValue,
   calcChange,
@@ -17,17 +18,22 @@ describe("kpi utils", () => {
   });
 
   it("calcChange handles rates and percent values", () => {
-    const kpiRate: any = { isRate: true };
+    const kpiRate: KPI = { key: "r1", label: "rate", unit: "%", agg: "last", desc: "", series: [], isRate: true };
     expect(calcChange(kpiRate, 0.12, 0.10)).toBeCloseTo((0.12 - 0.1) * 100);
 
-    const kpiNominal: any = { isRate: false };
+    const kpiNominal: KPI = { key: "n1", label: "nom", unit: "ty VND", agg: "last", desc: "", series: [], isRate: false };
     expect(calcChange(kpiNominal, 200, 100)).toBeCloseTo((200 - 100) / 100);
     expect(calcChange(kpiNominal, null, 100)).toBeNull();
   });
 
   it("aggregateToYear sums/averages correctly", () => {
-    const kpi: any = {
+    const kpi: KPI = {
+      key: "agg1",
+      label: "agg test",
+      unit: "cua hang",
+      isRate: false,
       agg: "sum",
+      desc: "",
       series: [
         { period: "2024Q1", value: 10 },
         { period: "2024Q2", value: 20 },
