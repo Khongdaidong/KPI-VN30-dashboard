@@ -1,6 +1,30 @@
 {
   "asOf": "2025Q4",
+  "auto": {
+    "enabled": true,
+    "maxDocs": 80,
+    "maxSitemapUrls": 2500,
+    "maxListLinks": 400,
+    "expandPdfFromHtml": true,
+    "expandFromFirst": 120,
+    "expandMax": 240,
+    "ocrEnabled": false,
+    "ocrEngine": "cli",
+    "ocrMaxDocs": 6,
+    "ocrMaxPages": 1,
+    "ocrScale": 1.4,
+    "ocrLangs": "eng"
+  },
   "PNJ": {
+    "auto": {
+      "debug": true,
+      "ocrEnabled": true,
+      "ocrEngine": "cli",
+      "ocrMaxDocs": 4,
+      "ocrMaxPages": 4,
+      "ocrScale": 1.4,
+      "ocrLangs": "eng"
+    },
     "stores": {
       "entries": [],
       "discover": []
@@ -19,6 +43,17 @@
     "rev": { "entries": [], "discover": [] }
   },
   "TCB": {
+    "auto": {
+      "debug": true,
+      "ocrEnabled": true,
+      "ocrEngine": "cli",
+      "expandFromFirst": 200,
+      "expandMax": 400,
+      "ocrMaxDocs": 4,
+      "ocrMaxPages": 4,
+      "ocrScale": 1.4,
+      "ocrLangs": "eng"
+    },
     "credit_yoy": { "entries": [], "discover": [] },
     "rev": { "entries": [], "discover": [] }
   }
