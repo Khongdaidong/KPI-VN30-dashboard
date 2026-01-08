@@ -20,28 +20,75 @@
       "debug": true,
       "ocrEnabled": true,
       "ocrEngine": "auto",
-      "ocrRotate": true,
-      "ocrMaxDocs": 4,
-      "ocrMaxPages": 8,
-      "ocrScale": 2,
+      "ocrRotate": false,
+      "ocrMaxDocs": 17,
+      "ocrMaxPages": 2,
+      "ocrScale": 1.4,
       "ocrLangs": "eng+vie"
     },
     "stores": {
+      "auto": {
+        "ocrEnabled": true,
+        "ocrMaxDocs": 6,
+        "ocrMaxPages": 4,
+        "ocrScale": 2,
+        "ocrLangs": "eng+vie",
+        "maxDocs": 20
+      },
       "entries": [],
       "discover": []
     },
     "rev": {
+      "auto": {
+        "ocrStartPage": 9,
+        "ocrMaxPages": 3,
+        "ocrScale": 1.4,
+        "ocrRotate": false
+      },
       "entries": [],
       "discover": []
     }
   },
   "MWG": {
-    "stores": { "entries": [], "discover": [] },
-    "rev": { "entries": [], "discover": [] }
+    "stores": {
+      "auto": {
+        "ocrEnabled": true,
+        "ocrMaxDocs": 6,
+        "ocrMaxPages": 4,
+        "ocrScale": 1.8,
+        "ocrLangs": "eng+vie",
+        "maxDocs": 20
+      },
+      "entries": [],
+      "discover": []
+    },
+    "rev": {
+      "auto": {
+        "ocrEnabled": true,
+        "ocrMaxDocs": 10,
+        "ocrMaxPages": 4,
+        "ocrScale": 1.6,
+        "ocrLangs": "eng+vie",
+        "maxDocs": 25
+      },
+      "entries": [],
+      "discover": []
+    }
   },
   "HPG": {
     "steel_volume": { "entries": [], "discover": [] },
-    "rev": { "entries": [], "discover": [] }
+    "rev": {
+      "auto": {
+        "ocrEnabled": true,
+        "ocrMaxDocs": 8,
+        "ocrMaxPages": 4,
+        "ocrScale": 1.6,
+        "ocrLangs": "eng+vie",
+        "maxDocs": 25
+      },
+      "entries": [],
+      "discover": []
+    }
   },
   "TCB": {
     "auto": {
@@ -50,12 +97,23 @@
       "ocrEngine": "auto",
       "expandFromFirst": 200,
       "expandMax": 400,
-      "ocrMaxDocs": 4,
-      "ocrMaxPages": 8,
-      "ocrScale": 1.4,
+      "ocrMaxDocs": 12,
+      "ocrMaxPages": 2,
+      "ocrScale": 1.2,
       "ocrLangs": "eng+vie"
     },
     "credit_yoy": { "entries": [], "discover": [] },
-    "rev": { "entries": [], "discover": [] }
+    "rev": {
+      "auto": {
+        "ocrEnabled": true,
+        "ocrMaxDocs": 10,
+        "ocrMaxPages": 6,
+        "ocrScale": 1.6,
+        "ocrLangs": "eng+vie",
+        "maxDocs": 25
+      },
+      "entries": [],
+      "discover": []
+    }
   }
 }

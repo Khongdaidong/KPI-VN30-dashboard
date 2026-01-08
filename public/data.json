@@ -1,5 +1,5 @@
 {
-  "asOf": "2025Q4",
+  "asOf": "2024Q4",
   "companies": [
     {
       "ticker": "PNJ",
@@ -13,91 +13,22 @@
           "agg": "last",
           "desc": "Tong so cua hang cuoi ky.",
           "sources": [
-            {
-              "title": "PNJ BCTC/IR"
-            }
+            { "title": "PNJ Finance Reports & IR News" }
           ],
           "series": [
-            {
-              "period": "2021Q1",
-              "value": null
-            },
-            {
-              "period": "2021Q2",
-              "value": null
-            },
-            {
-              "period": "2021Q3",
-              "value": null
-            },
-            {
-              "period": "2021Q4",
-              "value": null
-            },
-            {
-              "period": "2022Q1",
-              "value": null
-            },
-            {
-              "period": "2022Q2",
-              "value": null
-            },
-            {
-              "period": "2022Q3",
-              "value": null
-            },
-            {
-              "period": "2022Q4",
-              "value": null
-            },
-            {
-              "period": "2023Q1",
-              "value": null
-            },
-            {
-              "period": "2023Q2",
-              "value": null
-            },
-            {
-              "period": "2023Q3",
-              "value": null
-            },
-            {
-              "period": "2023Q4",
-              "value": null
-            },
-            {
-              "period": "2024Q1",
-              "value": null
-            },
-            {
-              "period": "2024Q2",
-              "value": null
-            },
-            {
-              "period": "2024Q3",
-              "value": null
-            },
-            {
-              "period": "2024Q4",
-              "value": null
-            },
-            {
-              "period": "2025Q1",
-              "value": null
-            },
-            {
-              "period": "2025Q2",
-              "value": null
-            },
-            {
-              "period": "2025Q3",
-              "value": null
-            },
-            {
-              "period": "2025Q4",
-              "value": null
-            }
+            { "period": "2021Q2", "value": 343 },
+            { "period": "2021Q4", "value": 341 },
+            { "period": "2022Q1", "value": 338 },
+            { "period": "2022Q2", "value": 351 },
+            { "period": "2022Q4", "value": 364 },
+            { "period": "2023Q1", "value": 365 },
+            { "period": "2023Q2", "value": 376 },
+            { "period": "2023Q3", "value": 390 },
+            { "period": "2023Q4", "value": 400 },
+            { "period": "2024Q1", "value": 401 },
+            { "period": "2024Q2", "value": 405 },
+            { "period": "2024Q3", "value": 418 },
+            { "period": "2024Q4", "value": 429 }
           ]
         },
         {
@@ -108,91 +39,22 @@
           "agg": "sum",
           "desc": "Doanh thu thuan theo ky.",
           "sources": [
-            {
-              "title": "PNJ BCTC hop nhat (KQKD)"
-            }
+            { "title": "PNJ BCTC hop nhat (KQKD)" }
           ],
           "series": [
-            {
-              "period": "2021Q1",
-              "value": null
-            },
-            {
-              "period": "2021Q2",
-              "value": null
-            },
-            {
-              "period": "2021Q3",
-              "value": null
-            },
-            {
-              "period": "2021Q4",
-              "value": null
-            },
-            {
-              "period": "2022Q1",
-              "value": null
-            },
-            {
-              "period": "2022Q2",
-              "value": null
-            },
-            {
-              "period": "2022Q3",
-              "value": null
-            },
-            {
-              "period": "2022Q4",
-              "value": null
-            },
-            {
-              "period": "2023Q1",
-              "value": null
-            },
-            {
-              "period": "2023Q2",
-              "value": null
-            },
-            {
-              "period": "2023Q3",
-              "value": null
-            },
-            {
-              "period": "2023Q4",
-              "value": null
-            },
-            {
-              "period": "2024Q1",
-              "value": null
-            },
-            {
-              "period": "2024Q2",
-              "value": null
-            },
-            {
-              "period": "2024Q3",
-              "value": null
-            },
-            {
-              "period": "2024Q4",
-              "value": null
-            },
-            {
-              "period": "2025Q1",
-              "value": null
-            },
-            {
-              "period": "2025Q2",
-              "value": null
-            },
-            {
-              "period": "2025Q3",
-              "value": 8235.605818836
-            },
-            {
-              "period": "2025Q4",
-              "value": null
-            }
+            { "period": "2021Q4", "value": 7099 },
+            { "period": "2022Q1", "value": 10142 },
+            { "period": "2022Q2", "value": 8068 },
+            { "period": "2022Q3", "value": 7364 },
+            { "period": "2022Q4", "value": 8302 },
+            { "period": "2023Q1", "value": 9796 },
+            { "period": "2023Q2", "value": 6663 },
+            { "period": "2023Q3", "value": 6918 },
+            { "period": "2023Q4", "value": 9760 },
+            { "period": "2024Q1", "value": 12594 },
+            { "period": "2024Q2", "value": 9519 },
+            { "period": "2024Q3", "value": 7130 },
+            { "period": "2024Q4", "value": 8581 }
           ]
         }
       ]
@@ -207,93 +69,17 @@
           "unit": "cua hang",
           "isRate": false,
           "agg": "last",
-          "desc": "Tong so diem ban cuoi ky.",
+          "desc": "Tong so diem ban cuoi ky (TGDD, DMX, BHX, An Khang, etc).",
           "sources": [
-            {
-              "title": "MWG BCTC/IR"
-            }
+            { "title": "MWG BCTC/IR" }
           ],
           "series": [
-            {
-              "period": "2021Q1",
-              "value": null
-            },
-            {
-              "period": "2021Q2",
-              "value": null
-            },
-            {
-              "period": "2021Q3",
-              "value": null
-            },
-            {
-              "period": "2021Q4",
-              "value": null
-            },
-            {
-              "period": "2022Q1",
-              "value": null
-            },
-            {
-              "period": "2022Q2",
-              "value": null
-            },
-            {
-              "period": "2022Q3",
-              "value": null
-            },
-            {
-              "period": "2022Q4",
-              "value": null
-            },
-            {
-              "period": "2023Q1",
-              "value": null
-            },
-            {
-              "period": "2023Q2",
-              "value": null
-            },
-            {
-              "period": "2023Q3",
-              "value": null
-            },
-            {
-              "period": "2023Q4",
-              "value": null
-            },
-            {
-              "period": "2024Q1",
-              "value": null
-            },
-            {
-              "period": "2024Q2",
-              "value": null
-            },
-            {
-              "period": "2024Q3",
-              "value": null
-            },
-            {
-              "period": "2024Q4",
-              "value": null
-            },
-            {
-              "period": "2025Q1",
-              "value": null
-            },
-            {
-              "period": "2025Q2",
-              "value": null
-            },
-            {
-              "period": "2025Q3",
-              "value": null
-            },
-            {
-              "period": "2025Q4",
-              "value": null
-            }
+            { "period": "2021Q4", "value": 5306 },
+            { "period": "2022Q4", "value": 5700 },
+            { "period": "2023Q3", "value": 5764 },
+            { "period": "2023Q4", "value": 5500 },
+            { "period": "2024Q1", "value": 5541 },
+            { "period": "2024Q4", "value": 5292 }
           ]
         },
         {
@@ -304,91 +90,17 @@
           "agg": "sum",
           "desc": "Doanh thu thuan theo ky.",
           "sources": [
-            {
-              "title": "MWG BCTC hop nhat (KQKD)"
-            }
+            { "title": "MWG BCTC hop nhat (KQKD)" }
           ],
           "series": [
-            {
-              "period": "2021Q1",
-              "value": null
-            },
-            {
-              "period": "2021Q2",
-              "value": null
-            },
-            {
-              "period": "2021Q3",
-              "value": null
-            },
-            {
-              "period": "2021Q4",
-              "value": null
-            },
-            {
-              "period": "2022Q1",
-              "value": null
-            },
-            {
-              "period": "2022Q2",
-              "value": null
-            },
-            {
-              "period": "2022Q3",
-              "value": null
-            },
-            {
-              "period": "2022Q4",
-              "value": null
-            },
-            {
-              "period": "2023Q1",
-              "value": null
-            },
-            {
-              "period": "2023Q2",
-              "value": null
-            },
-            {
-              "period": "2023Q3",
-              "value": null
-            },
-            {
-              "period": "2023Q4",
-              "value": null
-            },
-            {
-              "period": "2024Q1",
-              "value": null
-            },
-            {
-              "period": "2024Q2",
-              "value": null
-            },
-            {
-              "period": "2024Q3",
-              "value": null
-            },
-            {
-              "period": "2024Q4",
-              "value": null
-            },
-            {
-              "period": "2025Q1",
-              "value": null
-            },
-            {
-              "period": "2025Q2",
-              "value": null
-            },
-            {
-              "period": "2025Q3",
-              "value": null
-            },
-            {
-              "period": "2025Q4",
-              "value": null
-            }
+            { "period": "2021Q4", "value": 36176 },
+            { "period": "2022Q4", "value": 30588 },
+            { "period": "2023Q3", "value": 30300 },
+            { "period": "2023Q4", "value": 31420 },
+            { "period": "2024Q1", "value": 31486 },
+            { "period": "2024Q2", "value": 34025 },
+            { "period": "2024Q3", "value": 34147 },
+            { "period": "2024Q4", "value": 34574 }
           ]
         }
       ]
@@ -403,93 +115,22 @@
           "unit": "trieu tan",
           "isRate": false,
           "agg": "sum",
-          "desc": "San luong thep theo ky.",
+          "desc": "San luong thep xay dung theo ky.",
           "sources": [
-            {
-              "title": "HPG IR san luong/quy"
-            }
+            { "title": "HPG IR san luong/quy" }
           ],
           "series": [
-            {
-              "period": "2021Q1",
-              "value": null
-            },
-            {
-              "period": "2021Q2",
-              "value": null
-            },
-            {
-              "period": "2021Q3",
-              "value": null
-            },
-            {
-              "period": "2021Q4",
-              "value": null
-            },
-            {
-              "period": "2022Q1",
-              "value": null
-            },
-            {
-              "period": "2022Q2",
-              "value": null
-            },
-            {
-              "period": "2022Q3",
-              "value": null
-            },
-            {
-              "period": "2022Q4",
-              "value": null
-            },
-            {
-              "period": "2023Q1",
-              "value": null
-            },
-            {
-              "period": "2023Q2",
-              "value": null
-            },
-            {
-              "period": "2023Q3",
-              "value": null
-            },
-            {
-              "period": "2023Q4",
-              "value": null
-            },
-            {
-              "period": "2024Q1",
-              "value": null
-            },
-            {
-              "period": "2024Q2",
-              "value": null
-            },
-            {
-              "period": "2024Q3",
-              "value": null
-            },
-            {
-              "period": "2024Q4",
-              "value": null
-            },
-            {
-              "period": "2025Q1",
-              "value": null
-            },
-            {
-              "period": "2025Q2",
-              "value": 2.6
-            },
-            {
-              "period": "2025Q3",
-              "value": null
-            },
-            {
-              "period": "2025Q4",
-              "value": null
-            }
+            { "period": "2022Q2", "value": 1.3 },
+            { "period": "2022Q3", "value": 1.08 },
+            { "period": "2022Q4", "value": 0.79 },
+            { "period": "2023Q1", "value": 0.87 },
+            { "period": "2023Q2", "value": 0.784 },
+            { "period": "2023Q3", "value": 0.92 },
+            { "period": "2023Q4", "value": 1.2 },
+            { "period": "2024Q1", "value": 0.956 },
+            { "period": "2024Q2", "value": 1.27 },
+            { "period": "2024Q3", "value": 1.1 },
+            { "period": "2024Q4", "value": 1.2 }
           ]
         },
         {
@@ -500,91 +141,25 @@
           "agg": "sum",
           "desc": "Doanh thu thuan theo ky.",
           "sources": [
-            {
-              "title": "HPG BCTC hop nhat (KQKD)"
-            }
+            { "title": "HPG BCTC hop nhat (KQKD)" }
           ],
           "series": [
-            {
-              "period": "2021Q1",
-              "value": null
-            },
-            {
-              "period": "2021Q2",
-              "value": null
-            },
-            {
-              "period": "2021Q3",
-              "value": null
-            },
-            {
-              "period": "2021Q4",
-              "value": null
-            },
-            {
-              "period": "2022Q1",
-              "value": null
-            },
-            {
-              "period": "2022Q2",
-              "value": null
-            },
-            {
-              "period": "2022Q3",
-              "value": null
-            },
-            {
-              "period": "2022Q4",
-              "value": null
-            },
-            {
-              "period": "2023Q1",
-              "value": null
-            },
-            {
-              "period": "2023Q2",
-              "value": null
-            },
-            {
-              "period": "2023Q3",
-              "value": null
-            },
-            {
-              "period": "2023Q4",
-              "value": null
-            },
-            {
-              "period": "2024Q1",
-              "value": null
-            },
-            {
-              "period": "2024Q2",
-              "value": null
-            },
-            {
-              "period": "2024Q3",
-              "value": null
-            },
-            {
-              "period": "2024Q4",
-              "value": null
-            },
-            {
-              "period": "2025Q1",
-              "value": null
-            },
-            {
-              "period": "2025Q2",
-              "value": null
-            },
-            {
-              "period": "2025Q3",
-              "value": null
-            },
-            {
-              "period": "2025Q4",
-              "value": null
-            }
+            { "period": "2021Q1", "value": 31000 },
+            { "period": "2021Q2", "value": 35100 },
+            { "period": "2021Q3", "value": 39700 },
+            { "period": "2021Q4", "value": 45000 },
+            { "period": "2022Q1", "value": 44400 },
+            { "period": "2022Q2", "value": 37400 },
+            { "period": "2022Q3", "value": 34100 },
+            { "period": "2022Q4", "value": 25800 },
+            { "period": "2023Q1", "value": 26870 },
+            { "period": "2023Q2", "value": 29800 },
+            { "period": "2023Q3", "value": 28480 },
+            { "period": "2023Q4", "value": 34900 },
+            { "period": "2024Q1", "value": 31093 },
+            { "period": "2024Q2", "value": 39936 },
+            { "period": "2024Q3", "value": 33956 },
+            { "period": "2024Q4", "value": 34491 }
           ]
         }
       ]
@@ -595,192 +170,46 @@
       "kpis": [
         {
           "key": "credit_yoy",
-          "label": "Tang truong tin dung (YoY)",
+          "label": "Tang truong tin dung (YTD)",
           "unit": "%",
           "isRate": true,
           "agg": "avg",
-          "desc": "Tang truong du no cho vay so voi cung ky.",
+          "desc": "Tang truong du no cho vay so voi dau nam (YTD).",
           "sources": [
-            {
-              "title": "TCB BCTC/IR (du no cho vay)"
-            }
+            { "title": "TCB BCTC/IR" }
           ],
           "series": [
-            {
-              "period": "2021Q1",
-              "value": null
-            },
-            {
-              "period": "2021Q2",
-              "value": null
-            },
-            {
-              "period": "2021Q3",
-              "value": null
-            },
-            {
-              "period": "2021Q4",
-              "value": null
-            },
-            {
-              "period": "2022Q1",
-              "value": null
-            },
-            {
-              "period": "2022Q2",
-              "value": null
-            },
-            {
-              "period": "2022Q3",
-              "value": null
-            },
-            {
-              "period": "2022Q4",
-              "value": null
-            },
-            {
-              "period": "2023Q1",
-              "value": null
-            },
-            {
-              "period": "2023Q2",
-              "value": null
-            },
-            {
-              "period": "2023Q3",
-              "value": null
-            },
-            {
-              "period": "2023Q4",
-              "value": null
-            },
-            {
-              "period": "2024Q1",
-              "value": null
-            },
-            {
-              "period": "2024Q2",
-              "value": null
-            },
-            {
-              "period": "2024Q3",
-              "value": null
-            },
-            {
-              "period": "2024Q4",
-              "value": null
-            },
-            {
-              "period": "2025Q1",
-              "value": null
-            },
-            {
-              "period": "2025Q2",
-              "value": null
-            },
-            {
-              "period": "2025Q3",
-              "value": null
-            },
-            {
-              "period": "2025Q4",
-              "value": null
-            }
+            { "period": "2021Q4", "value": 0.221 },
+            { "period": "2022Q4", "value": 0.15 },
+            { "period": "2023Q4", "value": 0.216 },
+            { "period": "2024Q1", "value": 0.071 },
+            { "period": "2024Q3", "value": 0.174 },
+            { "period": "2024Q4", "value": 0.21 }
           ]
         },
         {
           "key": "rev",
-          "label": "Tong thu nhap hoat dong",
+          "label": "Tong thu nhap hoat dong (TOI)",
           "unit": "ty VND",
           "isRate": false,
           "agg": "sum",
           "desc": "Tong thu nhap hoat dong theo ky.",
           "sources": [
-            {
-              "title": "TCB BCTC/IR"
-            }
+            { "title": "TCB BCTC/IR" }
           ],
           "series": [
-            {
-              "period": "2021Q1",
-              "value": null
-            },
-            {
-              "period": "2021Q2",
-              "value": null
-            },
-            {
-              "period": "2021Q3",
-              "value": null
-            },
-            {
-              "period": "2021Q4",
-              "value": null
-            },
-            {
-              "period": "2022Q1",
-              "value": null
-            },
-            {
-              "period": "2022Q2",
-              "value": null
-            },
-            {
-              "period": "2022Q3",
-              "value": null
-            },
-            {
-              "period": "2022Q4",
-              "value": null
-            },
-            {
-              "period": "2023Q1",
-              "value": null
-            },
-            {
-              "period": "2023Q2",
-              "value": null
-            },
-            {
-              "period": "2023Q3",
-              "value": null
-            },
-            {
-              "period": "2023Q4",
-              "value": null
-            },
-            {
-              "period": "2024Q1",
-              "value": null
-            },
-            {
-              "period": "2024Q2",
-              "value": null
-            },
-            {
-              "period": "2024Q3",
-              "value": null
-            },
-            {
-              "period": "2024Q4",
-              "value": null
-            },
-            {
-              "period": "2025Q1",
-              "value": null
-            },
-            {
-              "period": "2025Q2",
-              "value": null
-            },
-            {
-              "period": "2025Q3",
-              "value": null
-            },
-            {
-              "period": "2025Q4",
-              "value": null
-            }
+            { "period": "2021Q1", "value": 8900 },
+            { "period": "2021Q2", "value": 9200 },
+            { "period": "2022Q1", "value": 10100 },
+            { "period": "2022Q2", "value": 11000 },
+            { "period": "2022Q3", "value": 10179 },
+            { "period": "2022Q4", "value": 9427 },
+            { "period": "2023Q1", "value": 10167 },
+            { "period": "2023Q4", "value": 11017 },
+            { "period": "2024Q1", "value": 13420 },
+            { "period": "2024Q2", "value": 12262 },
+            { "period": "2024Q3", "value": 11754 },
+            { "period": "2024Q4", "value": 9555 }
           ]
         }
       ]

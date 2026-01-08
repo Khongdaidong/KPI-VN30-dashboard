@@ -70,7 +70,10 @@ const AUTO_SEEDS = {
       "https://www.pnj.com.vn/sitemap_index.xml",
       "https://www.pnj.com.vn/sitemap-index.xml",
     ],
-    listPages: ["https://www.pnj.com.vn/quan-he-co-dong/bao-cao-tai-chinh/"],
+    listPages: [
+      "https://www.pnj.com.vn/quan-he-co-dong/bao-cao-tai-chinh/",
+      "https://www.pnj.com.vn/quan-he-co-dong/bao-cao-thuong-nien/",
+    ],
   },
   MWG: {
     sitemaps: ["https://mwg.vn/sitemap.xml"],
@@ -105,6 +108,7 @@ const AUTO_SEEDS = {
 
 const KPI_PATTERNS = {
   stores: {
+    forceKeywordFilter: true,
     patterns: [
       "so\\s*cua\\s*hang[^0-9]{0,20}([0-9][0-9.,\\s]+)",
       "tong\\s*so\\s*cua\\s*hang[^0-9]{0,20}([0-9][0-9.,\\s]+)",
@@ -121,7 +125,43 @@ const KPI_PATTERNS = {
     ],
     unitKind: "count",
     minValue: 50,
-    urlKeywords: ["cua-hang", "store", "store-network", "mang-luoi", "he-thong"],
+    urlKeywords: [
+      "cua-hang",
+      "store",
+      "store-network",
+      "mang-luoi",
+      "he-thong",
+      "bao-cao-thuong-nien",
+      "annual-report",
+      "cap-nhat",
+      "cap nhat",
+      "tinh-hinh-kinh-doanh",
+      "tinh hinh kinh doanh",
+    ],
+    excludeUrlKeywords: [
+      "phieu-bieu-quyet",
+      "bieu-quyet",
+      "nghi-quyet",
+      "quy-che",
+      "dieu-le",
+      "dhdcd",
+      "dai-hoi",
+      "to-trinh",
+      "bien-ban",
+      "thu-moi",
+      "chuong-trinh",
+      "giai-trinh",
+      "cbtt",
+      "cong-bo-thong-tin",
+      "thong-bao",
+      "proxy",
+      "resolution",
+      "charter",
+      "bylaw",
+      "by-law",
+      "agenda",
+      "notice",
+    ],
     ocrKeywords: ["cua hang", "store", "hang"],
   },
   rev: {
@@ -142,8 +182,10 @@ const KPI_PATTERNS = {
       "total\\s*operating\\s*income",
       "doanh\\s*thu\\s*ban\\s*hang",
     ],
+    preferUrlKeywords: ["hop-nhat", "consolidated"],
+    excludeUrlKeywords: ["rieng", "separate", "giai-trinh", "cbtt", "en.pdf", "-en"],
     unitKind: "currency",
-    minValue: 100,
+    minValue: 2500,
     maxValue: 60000,
     urlKeywords: ["bctc", "bao-cao-tai-chinh", "financial", "report", "kqkd"],
     requiresPdf: true,
@@ -162,6 +204,7 @@ const KPI_PATTERNS = {
     ocrKeywords: ["san luong", "thep", "steel", "tan"],
   },
   credit_yoy: {
+    forceKeywordFilter: true,
     patterns: [
       "tang\\s*truong\\s*tin\\s*dung[^0-9%]{0,20}([0-9][0-9.,\\s]+)\\s*%?",
       "tang\\s*truong\\s*du\\s*no[^0-9%]{0,20}([0-9][0-9.,\\s]+)\\s*%?",
@@ -179,7 +222,36 @@ const KPI_PATTERNS = {
     unitKind: "percent",
     isRate: true,
     minValue: -0.2,
-    urlKeywords: ["bao-cao", "kqkd", "tai-chinh", "ket-qua-kinh-doanh", "tin-dung", "credit", "loan"],
+    urlKeywords: ["ket-qua-kinh-doanh", "kqkd", "bao-cao-tai-chinh", "bctc", "thong-bao", "tin-dung"],
+    preferUrlKeywords: [
+      "kqkd",
+      "ket-qua-kinh-doanh",
+      "bao-cao-tai-chinh",
+      "bctc",
+      "bao-cao",
+      "financial",
+      "report",
+      "quan-he-co-dong",
+      "cong-bo-thong-tin",
+    ],
+    excludeUrlKeywords: [
+      "chu-the-tin-dung",
+      "tin-dung-hien-huu",
+      "the-tin-dung",
+      "credit-card",
+      "the-le",
+      "khuyen-mai",
+      "uu-dai",
+      "hoan-tien",
+      "promo",
+      "danh-sach",
+      "ds-kh",
+      "dot-",
+      "mo-the",
+      "mua-ve",
+      "visa",
+      "mastercard",
+    ],
     ocrKeywords: ["tin dung", "credit", "loan"],
   },
 };
@@ -299,10 +371,12 @@ async function renderPdfPages(buffer, opts = {}) {
   };
   const loadingTask = pdfjsLib.getDocument(pdfOptions);
   const pdf = await loadingTask.promise;
-  const totalPages = Math.min(pdf.numPages || 0, maxPages);
+  const total = pdf.numPages || 0;
+  const startPage = Math.min(Math.max(1, opts.startPage || 1), total || 1);
+  const endPage = Math.min(total, startPage + maxPages - 1);
   const pages = [];
 
-  for (let pageNum = 1; pageNum <= totalPages; pageNum += 1) {
+  for (let pageNum = startPage; pageNum <= endPage; pageNum += 1) {
     const page = await pdf.getPage(pageNum);
     const viewport = page.getViewport({ scale });
     const canvas = createCanvas(Math.ceil(viewport.width), Math.ceil(viewport.height));
@@ -460,6 +534,17 @@ function foldAscii(input) {
     .toLowerCase();
 }
 
+function decodeHtmlEntities(input) {
+  return String(input || "")
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+    .replace(/&#([0-9]+);/g, (_, num) => String.fromCharCode(parseInt(num, 10)))
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'");
+}
+
 function normalizeNumber(str) {
   if (!str) return null;
   const cleaned = String(str).replace(/[^\d,.\-]/g, "");
@@ -506,11 +591,15 @@ function normalizeByUnit(value, unitToken, context, unitKind) {
   if (unitKind === "currency") {
     if (token.includes("billion") || token.includes("ty")) return value;
     if (token.includes("million") || token.includes("trieu")) return value / 1000;
+    if (token.includes("nghin") || token.includes("thousand")) return value / 1000000;
     if (token.includes("usd")) return null;
     if (ctx.includes("trieu") || ctx.includes("million")) return value / 1000;
+    if (ctx.includes("nghin") || ctx.includes("thousand")) return value / 1000000;
     if (ctx.includes("ty") || ctx.includes("billion")) return value;
-    if (Math.abs(value) >= 1e6) return value / 1e9;
-    if (Math.abs(value) >= 1e3) return value / 1e3;
+    const abs = Math.abs(value);
+    if (abs >= 1e12) return value / 1e9;
+    if (abs >= 1e9) return value / 1e6;
+    if (abs >= 1e6) return value / 1e3;
     return value;
   }
   if (unitKind === "volume") {
@@ -561,14 +650,23 @@ function splitTextLines(text) {
     .filter((line) => line.length > 0);
 }
 
-function extractValueFromLines(lines, rowPatterns, unitKind, minValue, maxValue) {
+function extractValueFromLines(lines, rowPatterns, unitKind, minValue, maxValue, opts = {}) {
   if (!lines || !lines.length || !rowPatterns || !rowPatterns.length) return null;
+  const windowLines = Math.max(0, Number(opts.windowLines || 0));
   const regexes = rowPatterns.map((p) => new RegExp(p, "i"));
-  for (const line of lines) {
-    const folded = foldAscii(line).replace(/\s+/g, " ");
+  for (let i = 0; i < lines.length; i += 1) {
+    const line = lines[i];
+    let folded = foldAscii(line).replace(/\s+/g, " ");
     for (const regex of regexes) {
       const match = regex.exec(folded);
       if (!match) continue;
+      if (windowLines > 0) {
+        for (let j = 1; j <= windowLines; j += 1) {
+          const extra = lines[i + j];
+          if (!extra) break;
+          folded = `${folded} ${foldAscii(extra).replace(/\s+/g, " ")}`;
+        }
+      }
       const after = folded.slice(match.index + match[0].length);
       const tokens = after.match(/[0-9][0-9.,]*/g);
       if (!tokens || !tokens.length) continue;
@@ -684,14 +782,23 @@ function extractLinksFromHtml(htmlText, baseUrl, maxLinks) {
 function extractLinkEntriesFromHtml(htmlText, baseUrl, maxLinks) {
   const out = [];
   const limit = maxLinks || 400;
+  let nonPdfCount = 0;
   const regex = /<a\s+[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
   let match;
   while ((match = regex.exec(htmlText)) !== null) {
     const href = match[1];
-    const text = match[2].replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+    const text = decodeHtmlEntities(match[2].replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim());
     const url = toAbsolute(href, baseUrl);
-    out.push({ url, text });
-    if (out.length >= limit) break;
+    const lower = url.toLowerCase();
+    if (lower.startsWith("javascript:") || lower.startsWith("tel:") || lower.startsWith("mailto:")) continue;
+    if (isPdf(url)) {
+      out.push({ url, text });
+      continue;
+    }
+    if (nonPdfCount < limit) {
+      out.push({ url, text });
+      nonPdfCount += 1;
+    }
   }
   return out;
 }
@@ -770,6 +877,55 @@ function inferPeriodFromText(foldedText) {
   return candidates.length ? candidates[0] : null;
 }
 
+function inferPeriodFromYtd(input) {
+  const text = foldAscii(input);
+  let match = text.match(/\b(20\d{2})[-_\s]*(?:nam[-_\s]*)?(3|6|9|12)\s*(?:thang|t)\b/);
+  if (match) {
+    const year = match[1];
+    const months = match[2];
+    const q = months === "3" ? 1 : months === "6" ? 2 : months === "9" ? 3 : months === "12" ? 4 : null;
+    return q ? `${year}Q${q}` : null;
+  }
+  match = text.match(/\b(3|6|9|12)\s*(?:thang|t)[-_\s]*(20\d{2})\b/);
+  if (match) {
+    const months = match[1];
+    const year = match[2];
+    const q = months === "3" ? 1 : months === "6" ? 2 : months === "9" ? 3 : months === "12" ? 4 : null;
+    return q ? `${year}Q${q}` : null;
+  }
+  return null;
+}
+
+function inferYearOnly(input) {
+  const text = foldAscii(input);
+  const match = text.match(/\b(20\d{2})\b/);
+  return match ? match[1] : null;
+}
+
+function inferPeriodForKpi(input, kpiKey) {
+  let period = inferPeriodFromString(input);
+  if (!period && (kpiKey === "credit_yoy" || kpiKey === "stores")) {
+    period = inferPeriodFromYtd(input);
+  }
+  if (!period && kpiKey === "stores") {
+    const year = inferYearOnly(input);
+    if (year) period = `${year}Q4`;
+  }
+  return period;
+}
+
+function inferPeriodForKpiFromText(foldedText, kpiKey) {
+  let period = inferPeriodFromText(foldedText);
+  if (!period && (kpiKey === "credit_yoy" || kpiKey === "stores")) {
+    period = inferPeriodFromYtd(foldedText);
+  }
+  if (!period && kpiKey === "stores") {
+    const year = inferYearOnly(foldedText);
+    if (year) period = `${year}Q4`;
+  }
+  return period;
+}
+
 function scoreUrl(url, kpiKey) {
   const lower = url.toLowerCase();
   let score = 0;
@@ -819,6 +975,35 @@ function dedupeEntries(list) {
     if (!item || !item.url) continue;
     if (seen.has(item.url)) continue;
     seen.add(item.url);
+    out.push(item);
+  }
+  return out;
+}
+
+function matchesAnyKeyword(input, keywords) {
+  if (!input || !keywords || !keywords.length) return false;
+  const text = foldAscii(input);
+  return keywords.some((k) => text.includes(foldAscii(k)));
+}
+
+function preferFiltered(base, filtered, minKeep, minRatio) {
+  if (!filtered.length) return base;
+  if (filtered.length >= minKeep) return filtered;
+  if (base.length && filtered.length >= Math.ceil(base.length * minRatio)) return filtered;
+  return base;
+}
+
+function limitPerPeriod(list, kpiKey, limit) {
+  if (!limit || limit <= 0) return list;
+  const out = [];
+  const counts = new Map();
+  for (const item of list) {
+    const period = inferPeriodForKpi(item.url, kpiKey) || inferPeriodForKpi(item.text, kpiKey);
+    if (period) {
+      const count = counts.get(period) || 0;
+      if (count >= limit) continue;
+      counts.set(period, count + 1);
+    }
     out.push(item);
   }
   return out;
@@ -911,7 +1096,12 @@ async function autoFillSeries(kpi) {
   const expandFromFirst = autoCfg.expandFromFirst || 120;
   const expandMax = autoCfg.expandMax || 240;
   if (expandPdf && candidates.length) {
-    const htmlCandidates = candidates.filter((item) => !isPdf(item.url)).slice(0, expandFromFirst);
+    const htmlCandidates = candidates
+      .filter((item) => !isPdf(item.url))
+      .map((item) => ({ item, score: scoreCandidate(item, kpiKey) }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, expandFromFirst)
+      .map((entry) => entry.item);
     const extra = [];
     for (const item of htmlCandidates) {
       try {
@@ -942,23 +1132,59 @@ async function autoFillSeries(kpi) {
       const text = foldAscii(item.text || "");
       return keywordList.some((k) => lower.includes(k) || text.includes(k));
     });
-    if (filtered.length) candidates = filtered;
+    if (kpiMeta.forceKeywordFilter) {
+      candidates = filtered;
+    } else {
+      candidates = preferFiltered(candidates, filtered, 6, 0.15);
+    }
+  }
+  if (autoCfg.debug) {
+    console.log(`[debug] ${kpi._ticker || ""} ${kpi.key} afterKeyword=${candidates.length}`);
   }
 
   if (kpiMeta.requiresPdf) {
     const filtered = candidates.filter((item) => item.url.toLowerCase().includes(".pdf"));
     if (filtered.length) candidates = filtered;
   }
+  if (autoCfg.debug) {
+    console.log(`[debug] ${kpi._ticker || ""} ${kpi.key} afterPdf=${candidates.length}`);
+  }
 
-  const withPeriod = candidates.filter((item) => inferPeriodFromString(item.url) || inferPeriodFromString(item.text));
-  if (withPeriod.length) candidates = withPeriod;
+  const withPeriod = candidates.filter(
+    (item) => inferPeriodForKpi(item.url, kpiKey) || inferPeriodForKpi(item.text, kpiKey)
+  );
+  candidates = preferFiltered(candidates, withPeriod, 6, 0.1);
+  if (autoCfg.debug) {
+    console.log(`[debug] ${kpi._ticker || ""} ${kpi.key} afterPeriod=${candidates.length}`);
+  }
 
-  candidates = dedupeEntries(candidates)
+  if (kpiMeta.preferUrlKeywords && kpiMeta.preferUrlKeywords.length) {
+    const preferred = candidates.filter(
+      (item) => matchesAnyKeyword(item.url, kpiMeta.preferUrlKeywords) || matchesAnyKeyword(item.text, kpiMeta.preferUrlKeywords)
+    );
+    candidates = preferFiltered(candidates, preferred, 6, 0.2);
+  }
+  if (kpiMeta.excludeUrlKeywords && kpiMeta.excludeUrlKeywords.length) {
+    const cleaned = candidates.filter(
+      (item) => !matchesAnyKeyword(item.url, kpiMeta.excludeUrlKeywords) && !matchesAnyKeyword(item.text, kpiMeta.excludeUrlKeywords)
+    );
+    candidates = preferFiltered(candidates, cleaned, 6, 0.2);
+  }
+
+  const scored = dedupeEntries(candidates)
     .map((item) => ({ ...item, score: scoreCandidate(item, kpiKey) }))
-    .filter((item) => item.score >= 3)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, maxDocs)
-    .map((item) => ({ url: item.url, text: item.text }));
+    .sort((a, b) => b.score - a.score);
+  const minScoreKeep = Math.min(12, Math.max(6, Math.floor(maxDocs * 0.25)));
+  let filtered = scored.filter((item) => item.score >= 3);
+  if (filtered.length < minScoreKeep) {
+    filtered = scored.filter((item) => item.score >= 2);
+  }
+  if (filtered.length < minScoreKeep) {
+    filtered = scored.filter((item) => item.score >= 1);
+  }
+  const perPeriodLimit = typeof autoCfg.maxDocsPerPeriod === "number" ? autoCfg.maxDocsPerPeriod : 2;
+  const chosen = limitPerPeriod(filtered.length ? filtered : scored, kpiKey, perPeriodLimit);
+  candidates = chosen.slice(0, maxDocs).map((item) => ({ url: item.url, text: item.text }));
 
   const missing = new Set(kpi.series.filter((p) => p.value === null).map((p) => p.period));
   const ocrEnabled = autoCfg.ocr === true || autoCfg.ocrEnabled === true;
@@ -981,11 +1207,12 @@ async function autoFillSeries(kpi) {
     if (!missing.size) break;
     const url = item.url;
     try {
-      const periodFromUrl = inferPeriodFromString(url);
-      const periodFromText = inferPeriodFromString(item.text);
+      const periodFromUrl = inferPeriodForKpi(url, kpiKey);
+      const periodFromText = inferPeriodForKpi(item.text, kpiKey);
+      const periodFromLink = periodFromUrl || periodFromText;
       if (periodFromUrl && !missing.has(periodFromUrl)) continue;
       const doc = await fetchDocument(url);
-      let period = periodFromUrl || periodFromText || inferPeriodFromText(doc.folded);
+      let period = periodFromUrl || periodFromText || inferPeriodForKpiFromText(doc.folded, kpiKey);
       let ocrText = null;
       let ocrFolded = null;
       const ensureOcr = async () => {
@@ -994,6 +1221,7 @@ async function autoFillSeries(kpi) {
         console.log(`[ocr] ${kpi.key} ${period || "unknown"} from ${url}`);
         ocrText = await ocrPdfBuffer(doc.buffer, {
           maxPages: ocrMaxPages,
+          startPage: autoCfg.ocrStartPage || 1,
           scale: ocrScale,
           langs: ocrLangs,
           engine: ocrEngine,
@@ -1009,7 +1237,7 @@ async function autoFillSeries(kpi) {
       if (!period && ocrEnabled && doc.isPdf) {
         await ensureOcr();
         if (ocrFolded) {
-          period = inferPeriodFromText(ocrFolded);
+          period = inferPeriodForKpiFromText(ocrFolded, kpiKey);
         }
       }
       if (!period || !missing.has(period)) continue;
@@ -1035,7 +1263,7 @@ async function autoFillSeries(kpi) {
           { strictPeriod: true }
         );
       }
-      if (value === null && periodFromUrl) {
+      if (value === null && periodFromLink) {
         value = extractValueFromText(
           doc.folded,
           primaryPatterns,
@@ -1056,6 +1284,12 @@ async function autoFillSeries(kpi) {
             { strictPeriod: false }
           );
         }
+      }
+      if (value === null && periodFromLink) {
+        const lines = splitTextLines(doc.text || "");
+        value = extractValueFromLines(lines, kpiMeta.rowPatterns, kpiMeta.unitKind, kpiMeta.minValue, kpiMeta.maxValue, {
+          windowLines: 2,
+        });
       }
       if (value === null && ocrEnabled && doc.isPdf && ocrRemaining > 0) {
         try {
@@ -1084,7 +1318,14 @@ async function autoFillSeries(kpi) {
           }
           if (value === null && ocrText) {
             const lines = splitTextLines(ocrText);
-            value = extractValueFromLines(lines, kpiMeta.rowPatterns, kpiMeta.unitKind, kpiMeta.minValue, kpiMeta.maxValue);
+            value = extractValueFromLines(
+              lines,
+              kpiMeta.rowPatterns,
+              kpiMeta.unitKind,
+              kpiMeta.minValue,
+              kpiMeta.maxValue,
+              { windowLines: 2 }
+            );
           }
         } catch (e) {
           const msg = e && e.message ? e.message : String(e || "ocr failed");
