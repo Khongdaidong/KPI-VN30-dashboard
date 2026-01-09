@@ -225,6 +225,69 @@
           ]
         },
         {
+          "key": "bhx_stores",
+          "label": "So cua hang BHX",
+          "unit": "cua hang",
+          "isRate": false,
+          "agg": "last",
+          "desc": "Tong so cua hang Bach Hoa Xanh cuoi ky.",
+          "sources": [
+            {
+              "title": "MWG BCTC/IR"
+            }
+          ],
+          "series": [
+            {
+              "period": "2021Q4",
+              "value": 2106
+            },
+            {
+              "period": "2022Q2",
+              "value": 1735
+            },
+            {
+              "period": "2022Q3",
+              "value": 1740
+            },
+            {
+              "period": "2022Q4",
+              "value": 1728
+            },
+            {
+              "period": "2023Q3",
+              "value": 1706
+            },
+            {
+              "period": "2023Q4",
+              "value": 1698
+            },
+            {
+              "period": "2024Q3",
+              "value": 1721
+            },
+            {
+              "period": "2024Q4",
+              "value": 1770
+            },
+            {
+              "period": "2025Q1",
+              "value": 2002
+            },
+            {
+              "period": "2025Q2",
+              "value": 2184
+            },
+            {
+              "period": "2025Q3",
+              "value": 2290
+            },
+            {
+              "period": "2025Q4",
+              "value": 2525
+            }
+          ]
+        },
+        {
           "key": "rev",
           "label": "Doanh thu thuan",
           "unit": "ty VND",
