@@ -84,7 +84,7 @@
             },
             {
               "period": "2025Q4",
-              "value": 449
+              "value": null
             }
           ]
         },
@@ -159,7 +159,7 @@
             },
             {
               "period": "2025Q2",
-              "value": 6234
+              "value": 7582
             },
             {
               "period": "2025Q3",
@@ -167,7 +167,7 @@
             },
             {
               "period": "2025Q4",
-              "value": 6591
+              "value": null
             }
           ]
         }
@@ -283,7 +283,7 @@
             },
             {
               "period": "2025Q4",
-              "value": 2525
+              "value": 2545
             }
           ]
         },
@@ -427,7 +427,7 @@
             },
             {
               "period": "2025Q4",
-              "value": 1.29
+              "value": null
             }
           ]
         },
@@ -576,6 +576,10 @@
             {
               "period": "2025Q3",
               "value": 0.168
+            },
+            {
+              "period": "2025Q4",
+              "value": null
             }
           ]
         },
@@ -650,7 +654,11 @@
             },
             {
               "period": "2025Q3",
-              "value": 13960
+              "value": 14246
+            },
+            {
+              "period": "2025Q4",
+              "value": null
             }
           ]
         }
