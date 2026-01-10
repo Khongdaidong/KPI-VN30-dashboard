@@ -437,8 +437,6 @@ export default function VnKpiDashboard() {
               <TabsList className="bg-secondary/40">
                 <TabsTrigger value="chart">Chart</TabsTrigger>
                 <TabsTrigger value="table">Data</TabsTrigger>
-                <TabsTrigger value="chart">Chart</TabsTrigger>
-                <TabsTrigger value="table">Data</TabsTrigger>
               </TabsList>
             </div>
           </div>
