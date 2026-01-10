@@ -76,11 +76,11 @@ function KPIInfo({ text }: { text: string }) {
 
 function SourceList({ sources }: { sources?: KpiSource[] }) {
   if (!sources || !sources.length) {
-    return <div className="text-xs text-muted-foreground/50 italic px-1">Nguon: (chua gan nguon)</div>;
+    return <div className="text-xs text-muted-foreground/50 italic px-1">Nguồn: (chưa gắn nguồn)</div>;
   }
   return (
     <div className="space-y-2">
-      <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Nguon du lieu</div>
+      <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Nguồn dữ liệu</div>
       <ul className="space-y-2">
         {sources.map((s, idx) => (
           <li key={`${s?.title}-${idx}`} className="rounded-lg border border-border/50 bg-secondary/20 p-2.5 transition-colors hover:bg-secondary/40 hover:border-border">
@@ -104,7 +104,7 @@ function SourceList({ sources }: { sources?: KpiSource[] }) {
                     rel="noreferrer"
                     className="group inline-flex items-center gap-1 rounded-sm text-xs text-primary transition-colors hover:text-primary/80"
                   >
-                    Link <ExternalLink className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    Liên kết <ExternalLink className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                   </a>
                 ) : null}
               </div>
@@ -141,7 +141,7 @@ function CustomTooltip({
   return (
     <div className="rounded-xl border border-border/60 bg-background/95 p-4 shadow-xl backdrop-blur-xl ring-1 ring-white/5">
       <div className="mb-3 border-b border-border/50 pb-2 text-sm font-semibold text-foreground">
-        Ky: {label}
+        Kỳ: {label}
       </div>
       <div className="space-y-3">
         <div className="flex items-center justify-between gap-6">
@@ -209,13 +209,31 @@ function StatCard({
           <div className="space-y-1">
             <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">{delta1Label}</div>
             {/* Simple check for positive/negative based on text string logic is weak, but sufficient for visual pass */}
-            <div className={cn("text-sm font-medium", delta1.includes("-") ? "text-red-400" : delta1 !== "-" ? "text-emerald-400" : "text-muted-foreground")}>
+            <div
+              className={cn(
+                "text-sm font-medium",
+                delta1 === "-" || delta1 === "—"
+                  ? "text-muted-foreground"
+                  : delta1.includes("-")
+                    ? "text-red-400"
+                    : "text-emerald-400"
+              )}
+            >
               {delta1}
             </div>
           </div>
           <div className="space-y-1 border-l border-white/5 pl-3">
             <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">{delta2Label}</div>
-            <div className={cn("text-sm font-medium", delta2.includes("-") ? "text-red-400" : delta2 !== "-" ? "text-emerald-400" : "text-muted-foreground")}>
+            <div
+              className={cn(
+                "text-sm font-medium",
+                delta2 === "-" || delta2 === "—"
+                  ? "text-muted-foreground"
+                  : delta2.includes("-")
+                    ? "text-red-400"
+                    : "text-emerald-400"
+              )}
+            >
               {delta2}
             </div>
           </div>
@@ -328,7 +346,7 @@ export default function VnKpiDashboard() {
       if (!tickers.has(ticker)) setTicker("PNJ");
       setView("chart");
     } catch (e: unknown) {
-      const message = e instanceof Error ? e.message : "Khong the doc JSON.";
+      const message = e instanceof Error ? e.message : "Không thể đọc JSON.";
       setImportErr(message);
     }
   }
@@ -365,9 +383,9 @@ export default function VnKpiDashboard() {
   }) {
     return (
       <div className="space-y-2">
-        <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
           <Label>{label}</Label>
-          <div className="text-xs text-muted-foreground">{granularity === "Q" ? "Theo quy" : "Theo nam"}</div>
+          <div className="text-xs text-muted-foreground">{granularity === "Q" ? "Theo quý" : "Theo năm"}</div>
         </div>
         <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
           {kpiOptions
@@ -396,9 +414,9 @@ export default function VnKpiDashboard() {
       {/* Header Section */}
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Market Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Bảng điều khiển KPI thị trường</h1>
           <p className="text-sm text-muted-foreground">
-            Du lieu tai chinh hop nhat &bull; {data.asOf || "Cap nhat moi nhat"}
+            Dữ liệu tài chính hợp nhất &bull; {data.asOf || "Cập nhật mới nhất"}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -409,7 +427,7 @@ export default function VnKpiDashboard() {
             <Download className="mr-2 h-3.5 w-3.5" /> CSV
           </Button>
           <Button variant="ghost" size="sm" onClick={resetDemo} className="h-9 text-muted-foreground hover:text-foreground">
-            <RefreshCw className="mr-2 h-3.5 w-3.5" /> Reset
+            <RefreshCw className="mr-2 h-3.5 w-3.5" /> Đặt lại
           </Button>
         </div>
       </div>
@@ -419,7 +437,7 @@ export default function VnKpiDashboard() {
         <div className="sticky top-4 z-30 flex flex-col gap-4 rounded-2xl border border-border/40 bg-card/60 p-4 shadow-sm backdrop-blur-xl md:flex-row md:items-center md:justify-between transition-all duration-200">
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ticker</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Mã CK</span>
               <Tabs value={ticker} onValueChange={(v) => setTicker(v as CompanyData["ticker"])}>
                 <TabsList className="bg-secondary/40">
                   <TabsTrigger value="PNJ">PNJ</TabsTrigger>
@@ -433,17 +451,17 @@ export default function VnKpiDashboard() {
             <div className="h-6 w-px bg-border/50 hidden md:block" />
 
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">View</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Chế độ xem</span>
               <TabsList className="bg-secondary/40">
-                <TabsTrigger value="chart">Chart</TabsTrigger>
-                <TabsTrigger value="table">Data</TabsTrigger>
+                <TabsTrigger value="chart">Biểu đồ</TabsTrigger>
+                <TabsTrigger value="table">Dữ liệu</TabsTrigger>
               </TabsList>
             </div>
           </div>
 
           <div className="flex items-center justify-between gap-4 md:justify-end">
             <div className="flex items-center gap-3 rounded-lg border border-border/40 bg-secondary/20 px-3 py-1.5">
-              <span className="text-xs font-medium text-muted-foreground">{granularity === "Y" ? "Nam (Year)" : "Quy (Quarter)"}</span>
+              <span className="text-xs font-medium text-muted-foreground">{granularity === "Y" ? "Năm" : "Quý"}</span>
               <Switch
                 checked={granularity === "Y"}
                 onCheckedChange={(v) => setGranularity(v ? "Y" : "Q")}
@@ -462,14 +480,14 @@ export default function VnKpiDashboard() {
             <div className="lg:col-span-3 space-y-6">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-foreground">Primary Metric</h3>
+                  <h3 className="text-sm font-semibold text-foreground">Chỉ tiêu chính</h3>
                 </div>
-                <KpiPicker label="Select Metric" value={primaryKpiKey} onChange={(v) => setPrimaryKpiKey(v)} />
+                <KpiPicker label="Chọn chỉ tiêu" value={primaryKpiKey} onChange={(v) => setPrimaryKpiKey(v)} />
               </div>
 
               <div className="rounded-2xl border border-border/50 bg-card/30 p-4 backdrop-blur-sm">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-sm font-semibold text-foreground">Secondary Overlay</h3>
+                  <h3 className="text-sm font-semibold text-foreground">Chỉ tiêu phụ</h3>
                   <Switch
                     checked={useSecondary}
                     onCheckedChange={(v) => {
@@ -493,21 +511,21 @@ export default function VnKpiDashboard() {
                     />
                     {secondaryKpi ? (
                       <div className="mt-2">
-                        <p className="text-xs font-medium text-muted-foreground mb-1">Source</p>
+                        <p className="text-xs font-medium text-muted-foreground mb-1">Nguồn</p>
                         <KPIInfo text={secondaryKpi.desc} />
                       </div>
                     ) : null}
                   </div>
                 ) : (
                   <div className="text-xs text-muted-foreground py-2 text-center">
-                    Enable to compare two metrics simultaneously
+                    Bật để so sánh hai chỉ tiêu cùng lúc
                   </div>
                 )}
               </div>
 
               {primaryKpi ? (
                 <div className="space-y-3">
-                  <h3 className="text-sm font-semibold text-foreground">Definition & Source</h3>
+                  <h3 className="text-sm font-semibold text-foreground">Định nghĩa & nguồn</h3>
                   <KPIInfo text={primaryKpi.desc} />
                   <SourceList sources={primaryKpi.sources} />
                 </div>
@@ -519,19 +537,19 @@ export default function VnKpiDashboard() {
               {/* Stats Row */}
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <StatCard
-                  title={primaryKpi?.label || "Primary"}
-                  subtitle={`Latest: ${primaryStats?.latestPeriod || "-"}`}
+                  title={primaryKpi?.label || "Chỉ tiêu chính"}
+                  subtitle={`Mới nhất: ${primaryStats?.latestPeriod || "-"}`}
                   value={primaryKpi ? formatValue(primaryStats?.latest ?? null, primaryKpi.unit, primaryKpi.isRate) : "-"}
                   delta1={primaryKpi ? formatChange(primaryKpi, primaryStats?.delta1 ?? null) : "-"}
                   delta2={primaryKpi ? formatChange(primaryKpi, primaryStats?.delta2 ?? null) : "-"}
-                  delta1Label={primaryStats?.delta1Label || (granularity === "Q" ? "QoQ" : yoyLabelForKPI(primaryKpi))}
-                  delta2Label={primaryStats?.delta2Label || (primaryKpi ? "CAGR 3Y" : "")}
+                  delta1Label={primaryStats?.delta1Label || (granularity === "Q" ? "So với quý trước" : yoyLabelForKPI(primaryKpi))}
+                  delta2Label={primaryStats?.delta2Label || (primaryKpi ? "CAGR 3 năm" : "")}
                   unit={primaryKpi?.unit || ""}
                 />
 
                 <StatCard
-                  title={secondaryKpi?.label || "Secondary"}
-                  subtitle={secondaryKpi ? `Latest: ${secondaryStats?.latestPeriod || "-"}` : "(Disabled)"}
+                  title={secondaryKpi?.label || "Chỉ tiêu phụ"}
+                  subtitle={secondaryKpi ? `Mới nhất: ${secondaryStats?.latestPeriod || "-"}` : "(Đã tắt)"}
                   value={
                     secondaryKpi
                       ? formatValue(secondaryStats?.latest ?? null, secondaryKpi.unit, secondaryKpi.isRate)
@@ -540,7 +558,7 @@ export default function VnKpiDashboard() {
                   delta1={secondaryKpi ? formatChange(secondaryKpi, secondaryStats?.delta1 ?? null) : "-"}
                   delta2={secondaryKpi ? formatChange(secondaryKpi, secondaryStats?.delta2 ?? null) : "-"}
                   delta1Label={secondaryStats?.delta1Label || (secondaryKpi ? yoyLabelForKPI(secondaryKpi) : "")}
-                  delta2Label={secondaryStats?.delta2Label || (secondaryKpi ? "CAGR 3Y" : "")}
+                  delta2Label={secondaryStats?.delta2Label || (secondaryKpi ? "CAGR 3 năm" : "")}
                   unit={secondaryKpi?.unit || ""}
                 />
               </div>
@@ -550,14 +568,14 @@ export default function VnKpiDashboard() {
                 <CardHeader className="border-b border-border/40 pb-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <CardTitle>Performance Trends</CardTitle>
+                      <CardTitle>Xu hướng biến động</CardTitle>
                       <CardDescription>
-                        {primaryKpi?.label} {useSecondary && secondaryKpi ? `vs ${secondaryKpi.label}` : ""}
+                        {primaryKpi?.label} {useSecondary && secondaryKpi ? `so với ${secondaryKpi.label}` : ""}
                       </CardDescription>
                     </div>
                     <Badge variant="outline" className="h-6 gap-1 border-primary/20 bg-primary/10 text-primary">
                       <RefreshCw className="h-3 w-3" />
-                      {granularity === "Q" ? "20 Quarters" : "5 Years"}
+                      {granularity === "Q" ? "20 quý" : "5 năm"}
                     </Badge>
                   </div>
                 </CardHeader>
@@ -620,7 +638,7 @@ export default function VnKpiDashboard() {
                         <Line
                           type="monotone"
                           dataKey="primary"
-                          name={primaryKpi?.label || "Primary"}
+                          name={primaryKpi?.label || "Chỉ tiêu chính"}
                           yAxisId="left"
                           stroke="#10B981"
                           strokeWidth={3}
@@ -657,7 +675,7 @@ export default function VnKpiDashboard() {
           <Card className="rounded-2xl border-border/50 bg-card/60 backdrop-blur-md">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Detailed Data</CardTitle>
+                <CardTitle>Dữ liệu chi tiết</CardTitle>
                 <KpiPicker label="" value={primaryKpiKey} onChange={(v) => setPrimaryKpiKey(v)} />
               </div>
             </CardHeader>
@@ -666,11 +684,11 @@ export default function VnKpiDashboard() {
                 <table className="w-full text-sm">
                   <thead className="bg-secondary/50">
                     <tr>
-                      <th className="px-4 py-3 text-left font-medium text-muted-foreground">Period</th>
-                      <th className="px-4 py-3 text-right font-medium text-muted-foreground">Value</th>
-                      <th className="px-4 py-3 text-right font-medium text-muted-foreground">Change (Prev)</th>
-                      <th className="px-4 py-3 text-right font-medium text-muted-foreground">{granularity === "Q" ? "YoY Change" : "-"}</th>
-                      <th className="px-4 py-3 text-right font-medium text-muted-foreground">Source</th>
+                      <th className="px-4 py-3 text-left font-medium text-muted-foreground">Kỳ</th>
+                      <th className="px-4 py-3 text-right font-medium text-muted-foreground">Giá trị</th>
+                      <th className="px-4 py-3 text-right font-medium text-muted-foreground">Thay đổi (kỳ trước)</th>
+                      <th className="px-4 py-3 text-right font-medium text-muted-foreground">{granularity === "Q" ? "So với cùng kỳ" : "-"}</th>
+                      <th className="px-4 py-3 text-right font-medium text-muted-foreground">Nguồn</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border/50 bg-background/50">
@@ -687,7 +705,7 @@ export default function VnKpiDashboard() {
                           <td className={cn("px-4 py-3 text-right font-medium", d1 !== null && d1 < 0 ? "text-red-400" : "text-emerald-400")}>{formatChange(primaryKpi, d1)}</td>
                           <td className={cn("px-4 py-3 text-right font-medium", d2 !== null && d2 < 0 ? "text-red-400" : "text-emerald-400")}>{granularity === "Q" ? formatChange(primaryKpi, d2) : "-"}</td>
                           <td className="px-4 py-3 text-right text-xs text-muted-foreground max-w-[200px] truncate" title={primaryKpi.sources?.[0]?.title}>
-                            {primaryKpi.sources?.[0]?.title || "—"}
+                            {primaryKpi.sources?.[0]?.title || "Chưa có nguồn"}
                           </td>
                         </tr>
                       );

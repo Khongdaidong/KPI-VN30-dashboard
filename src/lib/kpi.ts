@@ -61,20 +61,28 @@ const nf0 = new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 });
 const nf1 = new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 1 });
 const nf2 = new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 2 });
 
+const UNIT_TY_VND = ["ty VND", "tỷ VND"] as const;
+const UNIT_TRIEU_TAN = ["trieu tan", "triệu tấn"] as const;
+const UNIT_TRIEU_VND_TAN = ["trieu VND/tan", "triệu VND/tấn"] as const;
+const UNIT_CUA_HANG = ["cua hang", "cửa hàng"] as const;
+const UNIT_DIEM_PHAN_TRAM = ["pp", "điểm %"] as const;
+
+const isUnit = (unit: string, list: readonly string[]) => list.includes(unit);
+
 export function formatValue(v: number | null, unit: string, isRate?: boolean) {
-  if (v === null) return "—";
+  if (v === null) return "-";
   if (unit === "%") return `${nf1.format(v * 100)}%`;
-  if (unit === "pp") return `${nf1.format(v)} điểm %`;
+  if (isUnit(unit, UNIT_DIEM_PHAN_TRAM)) return `${nf1.format(v)} điểm %`;
   if (unit === "x") return `${nf2.format(v)}x`;
-  if (unit === "ty VND") return `${nf0.format(v)} tỷ`;
-  if (unit === "trieu tan") return `${nf2.format(v)} triệu tấn`;
-  if (unit === "trieu VND/tan") return `${nf1.format(v)} tr VND/tấn`;
-  if (unit === "cua hang") return `${nf0.format(v)} CH`;
+  if (isUnit(unit, UNIT_TY_VND)) return `${nf0.format(v)} tỷ VND`;
+  if (isUnit(unit, UNIT_TRIEU_TAN)) return `${nf2.format(v)} triệu tấn`;
+  if (isUnit(unit, UNIT_TRIEU_VND_TAN)) return `${nf1.format(v)} triệu VND/tấn`;
+  if (isUnit(unit, UNIT_CUA_HANG)) return `${nf0.format(v)} cửa hàng`;
   return isRate ? nf2.format(v) : nf1.format(v);
 }
 
 export function yoyLabelForKPI(kpi: KPI) {
-  return kpi.isRate ? "YoY (điểm %)" : "YoY (%)";
+  return kpi.isRate ? "So với cùng kỳ (điểm %)" : "So với cùng kỳ (%)";
 }
 
 export function safeNum(x: unknown): number | null {
@@ -84,8 +92,8 @@ export function safeNum(x: unknown): number | null {
 }
 
 export function formatChange(kpi: KPI, v: number | null) {
-  if (v === null) return "—";
-  if (kpi.isRate) return `${nf1.format(v)} pp`;
+  if (v === null) return "-";
+  if (kpi.isRate) return `${nf1.format(v)} điểm %`;
   return `${nf1.format(v * 100)}%`;
 }
 
@@ -198,10 +206,10 @@ export function calcStats(
   if (latest.v === null) {
     return {
       latest: null,
-      latestPeriod: "—",
+      latestPeriod: "-",
       delta1: null,
       delta2: null,
-      delta1Label: granularity === "Q" ? "QoQ" : yoyLabelForKPI(kpi),
+      delta1Label: granularity === "Q" ? "So với quý trước" : yoyLabelForKPI(kpi),
       delta2Label: granularity === "Q" ? yoyLabelForKPI(kpi) : "CAGR 3 năm",
     };
   }
@@ -216,7 +224,7 @@ export function calcStats(
       latestPeriod,
       delta1: calcChange(kpi, latest.v, prev),
       delta2: calcChange(kpi, latest.v, prevYoy),
-      delta1Label: "QoQ",
+      delta1Label: "So với quý trước",
       delta2Label: yoyLabelForKPI(kpi),
     };
   }
@@ -241,7 +249,7 @@ export function calcStats(
     delta1: yoy,
     delta2: vs3,
     delta1Label: yoyLabelForKPI(kpi),
-    delta2Label: kpi.isRate ? "So với 3 năm trước (pp)" : "CAGR 3 năm",
+    delta2Label: kpi.isRate ? "So với 3 năm trước (điểm %)" : "CAGR 3 năm",
   };
 }
 
@@ -250,10 +258,10 @@ export function yTickFormatterFactory(kpi: KPI) {
     const n = typeof v === "number" ? v : Number(v);
     if (!Number.isFinite(n)) return "";
     if (kpi.unit === "%") return `${nf1.format(n * 100)}%`;
-    if (kpi.unit === "ty VND") return nf0.format(n);
-    if (kpi.unit === "cua hang") return nf0.format(n);
-    if (kpi.unit === "trieu tan") return nf2.format(n);
-    if (kpi.unit === "trieu VND/tan") return nf1.format(n);
+    if (isUnit(kpi.unit, UNIT_TY_VND)) return nf0.format(n);
+    if (isUnit(kpi.unit, UNIT_CUA_HANG)) return nf0.format(n);
+    if (isUnit(kpi.unit, UNIT_TRIEU_TAN)) return nf2.format(n);
+    if (isUnit(kpi.unit, UNIT_TRIEU_VND_TAN)) return nf1.format(n);
     if (kpi.unit === "x") return nf2.format(n);
     return nf1.format(n);
   };
@@ -308,36 +316,36 @@ type CompanyConfig = {
 const COMPANIES_CONFIG: CompanyConfig[] = [
   {
     ticker: "PNJ",
-    name: "Vang bac Da quy Phu Nhuan",
+    name: "Vàng bạc Đá quý Phú Nhuận",
     kpis: [
       {
         key: "stores",
-        label: "So cua hang",
-        unit: "cua hang",
+        label: "Số cửa hàng",
+        unit: "cửa hàng",
         agg: "last",
-        desc: "Tong so cua hang cuoi ky (end-of-period).",
+        desc: "Tổng số cửa hàng cuối kỳ.",
         sources: [
           {
-            title: "PNJ — Bao cao thuong nien/IR (thong ke he thong cua hang)",
+            title: "PNJ — Báo cáo thường niên/IR (thống kê hệ thống cửa hàng)",
             asOf: "FY/YTD",
-            page: "(dien tr.)",
-            note: "Lay so cua hang cuoi ky.",
+            page: "(điền trang)",
+            note: "Lấy số cửa hàng cuối kỳ.",
           },
         ],
         series: { seed: "PNJ_stores", base: 360, drift: 0.007, vol: 2.4, min: 300, integer: true, seasonal: "none" },
       },
       {
         key: "rev",
-        label: "Doanh thu thuan",
-        unit: "ty VND",
+        label: "Doanh thu thuần",
+        unit: "tỷ VND",
         agg: "sum",
-        desc: "Doanh thu thuan theo quy (minh hoa). Thuong co mua vu, Q4 cao hon.",
+        desc: "Doanh thu thuần theo quý (minh họa). Thường có mùa vụ, Q4 cao hơn.",
         sources: [
           {
-            title: "PNJ — BCTC hop nhat (KQKD) — Doanh thu ban hang va cung cap dich vu",
-            asOf: "Quy/FY",
-            page: "(dien tr.)",
-            note: "So theo ky (flow). Neu xem nam: cong 4 quy.",
+            title: "PNJ — BCTC hợp nhất (KQKD) — Doanh thu bán hàng và cung cấp dịch vụ",
+            asOf: "Quý/FY",
+            page: "(điền trang)",
+            note: "Số theo kỳ (dòng). Nếu xem năm: cộng 4 quý.",
           },
         ],
         series: { seed: "PNJ_rev", base: 6200, drift: 0.017, vol: 430, min: 2500, seasonal: "q4_up" },
@@ -346,36 +354,36 @@ const COMPANIES_CONFIG: CompanyConfig[] = [
   },
   {
     ticker: "MWG",
-    name: "The Gioi Di Dong",
+    name: "Thế Giới Di Động",
     kpis: [
       {
         key: "stores",
-        label: "So cua hang",
-        unit: "cua hang",
+        label: "Số cửa hàng",
+        unit: "cửa hàng",
         agg: "last",
-        desc: "Tong so diem ban cuoi ky (toan he thong).",
+        desc: "Tổng số điểm bán cuối kỳ (toàn hệ thống).",
         sources: [
           {
-            title: "MWG — Bao cao thuong nien/IR (he thong cua hang theo chuoi)",
+            title: "MWG — Báo cáo thường niên/IR (hệ thống cửa hàng theo chuỗi)",
             asOf: "FY/YTD",
-            page: "(dien tr.)",
-            note: "Lay so end-of-period; neu co theo chuoi thi luu chi tiet.",
+            page: "(điền trang)",
+            note: "Lấy số cuối kỳ; nếu có theo chuỗi thì lưu chi tiết.",
           },
         ],
         series: { seed: "MWG_stores", base: 4200, drift: -0.002, vol: 28, min: 2500, max: 5000, integer: true, seasonal: "none" },
       },
       {
         key: "rev",
-        label: "Doanh thu thuan",
-        unit: "ty VND",
+        label: "Doanh thu thuần",
+        unit: "tỷ VND",
         agg: "sum",
-        desc: "Doanh thu thuan theo quy (minh hoa). Nen doc cung SSSG de phan tich.",
+        desc: "Doanh thu thuần theo quý (minh họa). Nên đọc cùng SSSG để phân tích.",
         sources: [
           {
-            title: "MWG — BCTC hop nhat (KQKD) — Doanh thu thuan",
-            asOf: "Quy/FY",
-            page: "(dien tr.)",
-            note: "So theo ky (flow). Neu xem nam: cong 4 quy.",
+            title: "MWG — BCTC hợp nhất (KQKD) — Doanh thu thuần",
+            asOf: "Quý/FY",
+            page: "(điền trang)",
+            note: "Số theo kỳ (dòng). Nếu xem năm: cộng 4 quý.",
           },
         ],
         series: { seed: "MWG_rev", base: 30000, drift: 0.005, vol: 1600, min: 18000, seasonal: "q4_up" },
@@ -384,36 +392,36 @@ const COMPANIES_CONFIG: CompanyConfig[] = [
   },
   {
     ticker: "HPG",
-    name: "Tap doan Hoa Phat",
+    name: "Tập đoàn Hòa Phát",
     kpis: [
       {
         key: "steel_volume",
-        label: "San luong thep ban",
-        unit: "trieu tan",
+        label: "Sản lượng thép bán",
+        unit: "triệu tấn",
         agg: "sum",
-        desc: "San luong thep theo quy (minh hoa). KPI dan dat doanh thu.",
+        desc: "Sản lượng thép theo quý (minh họa). KPI dẫn dắt doanh thu.",
         sources: [
           {
-            title: "HPG — Bao cao san luong/thong cao thang/quy (IR)",
-            asOf: "Quy gan nhat",
+            title: "HPG — Báo cáo sản lượng/thông cáo tháng/quý (IR)",
+            asOf: "Quý gần nhất",
             page: "(n/a)",
-            note: "Neu so theo thang: cong 3 thang = 1 quy.",
+            note: "Nếu số theo tháng: cộng 3 tháng = 1 quý.",
           },
         ],
         series: { seed: "HPG_vol", base: 1.7, drift: 0.012, vol: 0.2, min: 0.7, max: 3.4, seasonal: "q4_up" },
       },
       {
         key: "rev",
-        label: "Doanh thu thuan",
-        unit: "ty VND",
+        label: "Doanh thu thuần",
+        unit: "tỷ VND",
         agg: "sum",
-        desc: "Doanh thu theo quy (minh hoa). Dan dat boi san luong x ASP.",
+        desc: "Doanh thu theo quý (minh họa). Dẫn dắt bởi sản lượng x ASP.",
         sources: [
           {
-            title: "HPG — BCTC hop nhat (KQKD) — Doanh thu thuan",
-            asOf: "Quy/FY",
-            page: "(dien tr.)",
-            note: "So theo ky (flow).",
+            title: "HPG — BCTC hợp nhất (KQKD) — Doanh thu thuần",
+            asOf: "Quý/FY",
+            page: "(điền trang)",
+            note: "Số theo kỳ (dòng).",
           },
         ],
         series: { seed: "HPG_rev", base: 23000, drift: 0.013, vol: 2100, min: 9000, seasonal: "q4_up" },
@@ -426,33 +434,33 @@ const COMPANIES_CONFIG: CompanyConfig[] = [
     kpis: [
       {
         key: "credit_yoy",
-        label: "Tang truong tin dung (YoY)",
+        label: "Tăng trưởng tín dụng (YoY)",
         unit: "%",
         isRate: true,
         agg: "avg",
-        desc: "Tang truong du no cho vay so voi cung ky.",
+        desc: "Tăng trưởng dư nợ cho vay so với cùng kỳ.",
         sources: [
           {
-            title: "TCB — BCTC/IR (du no cho vay) hoac slide KQKD (YoY)",
-            asOf: "Quy gan nhat",
-            page: "(dien tr.)",
-            note: "Neu tu tinh: (Du no ky nay / du no cung ky - 1).",
+            title: "TCB — BCTC/IR (dư nợ cho vay) hoặc slide KQKD (YoY)",
+            asOf: "Quý gần nhất",
+            page: "(điền trang)",
+            note: "Nếu tự tính: (Dư nợ kỳ này / dư nợ cùng kỳ - 1).",
           },
         ],
         series: { seed: "TCB_credit", base: 0.18, drift: -0.004, vol: 0.035, min: -0.05, max: 0.32, seasonal: "none" },
       },
       {
         key: "rev",
-        label: "Tong thu nhap hoat dong",
-        unit: "ty VND",
+        label: "Tổng thu nhập hoạt động",
+        unit: "tỷ VND",
         agg: "sum",
-        desc: "Tong thu nhap hoat dong/thu nhap gop theo quy (minh hoa).",
+        desc: "Tổng thu nhập hoạt động/thu nhập gộp theo quý (minh họa).",
         sources: [
           {
-            title: "TCB — BCTC/IR (Tong thu nhap hoat dong)",
-            asOf: "Quy/FY",
-            page: "(dien tr.)",
-            note: "So theo ky (flow). Neu xem nam: cong 4 quy.",
+            title: "TCB — BCTC/IR (Tổng thu nhập hoạt động)",
+            asOf: "Quý/FY",
+            page: "(điền trang)",
+            note: "Số theo kỳ (dòng). Nếu xem năm: cộng 4 quý.",
           },
         ],
         series: { seed: "TCB_rev", base: 8500, drift: 0.01, vol: 520, min: 5000, seasonal: "none" },
@@ -476,7 +484,7 @@ function expandKpi(cfg: KpiConfig): KPI {
 
 export function buildDemoDataset(): Dataset {
   return {
-    asOf: "Demo minh hoa (thay bang so lieu thuc te tu BCTC/CBTT).",
+    asOf: "Demo minh họa (thay bằng số liệu thực tế từ BCTC/CBTT).",
     companies: COMPANIES_CONFIG.map((c) => ({
       ticker: c.ticker,
       name: c.name,
@@ -520,7 +528,7 @@ export function validateDataset(obj: unknown): Dataset {
   if (!Array.isArray(root.companies)) throw new Error("Thiếu 'companies'.");
 
   const companies: CompanyData[] = root.companies.map((c: unknown) => {
-    if (!c || typeof c !== "object") throw new Error("Company không hợp lệ.");
+    if (!c || typeof c !== "object") throw new Error("Công ty không hợp lệ.");
     const company = c as Record<string, unknown>;
     if (!["PNJ", "MWG", "HPG", "TCB"].includes(String(company.ticker))) {
       throw new Error("Ticker phải là PNJ/MWG/HPG/TCB.");

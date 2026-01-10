@@ -3,18 +3,18 @@
   "companies": [
     {
       "ticker": "PNJ",
-      "name": "Vang bac Da quy Phu Nhuan",
+      "name": "Vàng bạc Đá quý Phú Nhuận",
       "kpis": [
         {
           "key": "stores",
-          "label": "So cua hang",
-          "unit": "cua hang",
+          "label": "Số cửa hàng",
+          "unit": "cửa hàng",
           "isRate": false,
           "agg": "last",
-          "desc": "Tong so cua hang cuoi ky.",
+          "desc": "Tổng số cửa hàng cuối kỳ.",
           "sources": [
             {
-              "title": "PNJ Finance Reports & IR News"
+              "title": "Báo cáo tài chính & tin IR của PNJ"
             }
           ],
           "series": [
@@ -90,14 +90,14 @@
         },
         {
           "key": "rev",
-          "label": "Doanh thu thuan",
-          "unit": "ty VND",
+          "label": "Doanh thu thuần",
+          "unit": "tỷ VND",
           "isRate": false,
           "agg": "sum",
-          "desc": "Doanh thu thuan theo ky.",
+          "desc": "Doanh thu thuần theo kỳ.",
           "sources": [
             {
-              "title": "PNJ BCTC hop nhat (KQKD)"
+              "title": "PNJ BCTC hợp nhất (KQKD)"
             }
           ],
           "series": [
@@ -175,15 +175,15 @@
     },
     {
       "ticker": "MWG",
-      "name": "The Gioi Di Dong",
+      "name": "Thế Giới Di Động",
       "kpis": [
         {
           "key": "stores",
-          "label": "So cua hang",
-          "unit": "cua hang",
+          "label": "Số cửa hàng",
+          "unit": "cửa hàng",
           "isRate": false,
           "agg": "last",
-          "desc": "Tong so diem ban cuoi ky (TGDD, DMX, BHX, An Khang, etc).",
+          "desc": "Tổng số điểm bán cuối kỳ (TGDD, DMX, BHX, An Khang, v.v.).",
           "sources": [
             {
               "title": "MWG BCTC/IR"
@@ -226,11 +226,11 @@
         },
         {
           "key": "bhx_stores",
-          "label": "So cua hang BHX",
-          "unit": "cua hang",
+          "label": "Số cửa hàng BHX",
+          "unit": "cửa hàng",
           "isRate": false,
           "agg": "last",
-          "desc": "Tong so cua hang Bach Hoa Xanh cuoi ky.",
+          "desc": "Tổng số cửa hàng Bách Hóa Xanh cuối kỳ.",
           "sources": [
             {
               "title": "MWG BCTC/IR"
@@ -289,14 +289,14 @@
         },
         {
           "key": "rev",
-          "label": "Doanh thu thuan",
-          "unit": "ty VND",
+          "label": "Doanh thu thuần",
+          "unit": "tỷ VND",
           "isRate": false,
           "agg": "sum",
-          "desc": "Doanh thu thuan theo ky.",
+          "desc": "Doanh thu thuần theo kỳ.",
           "sources": [
             {
-              "title": "MWG BCTC hop nhat (KQKD)"
+              "title": "MWG BCTC hợp nhất (KQKD)"
             }
           ],
           "series": [
@@ -354,18 +354,18 @@
     },
     {
       "ticker": "HPG",
-      "name": "Tap doan Hoa Phat",
+      "name": "Tập đoàn Hòa Phát",
       "kpis": [
         {
           "key": "steel_volume",
-          "label": "San luong thep ban",
-          "unit": "trieu tan",
+          "label": "Sản lượng thép bán",
+          "unit": "triệu tấn",
           "isRate": false,
           "agg": "sum",
-          "desc": "San luong thep xay dung theo ky.",
+          "desc": "Sản lượng thép xây dựng theo kỳ.",
           "sources": [
             {
-              "title": "HPG IR san luong/quy"
+              "title": "HPG IR sản lượng/quý"
             }
           ],
           "series": [
@@ -433,14 +433,14 @@
         },
         {
           "key": "rev",
-          "label": "Doanh thu thuan",
-          "unit": "ty VND",
+          "label": "Doanh thu thuần",
+          "unit": "tỷ VND",
           "isRate": false,
           "agg": "sum",
-          "desc": "Doanh thu thuan theo ky.",
+          "desc": "Doanh thu thuần theo kỳ.",
           "sources": [
             {
-              "title": "HPG BCTC hop nhat (KQKD)"
+              "title": "HPG BCTC hợp nhất (KQKD)"
             }
           ],
           "series": [
@@ -530,11 +530,11 @@
       "kpis": [
         {
           "key": "credit_yoy",
-          "label": "Tang truong tin dung (YTD)",
+          "label": "Tăng trưởng tín dụng (YTD)",
           "unit": "%",
           "isRate": true,
           "agg": "avg",
-          "desc": "Tang truong du no cho vay so voi dau nam (YTD).",
+          "desc": "Tăng trưởng dư nợ cho vay so với đầu năm (YTD).",
           "sources": [
             {
               "title": "TCB BCTC/IR"
@@ -585,11 +585,11 @@
         },
         {
           "key": "rev",
-          "label": "Tong thu nhap hoat dong (TOI)",
-          "unit": "ty VND",
+          "label": "Tổng thu nhập hoạt động (TOI)",
+          "unit": "tỷ VND",
           "isRate": false,
           "agg": "sum",
-          "desc": "Tong thu nhap hoat dong theo ky.",
+          "desc": "Tổng thu nhập hoạt động theo kỳ.",
           "sources": [
             {
               "title": "TCB BCTC/IR"

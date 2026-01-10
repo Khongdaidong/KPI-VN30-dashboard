@@ -13,15 +13,15 @@ import {
 describe("kpi utils", () => {
   it("formatValue formats values according to unit", () => {
     expect(formatValue(0.18, "%", true)).toContain("%");
-    expect(formatValue(1234.56, "ty VND")).toContain("tỷ");
-    expect(formatValue(null, "ty VND")).toBe("—");
+    expect(formatValue(1234.56, "tỷ VND")).toContain("tỷ VND");
+    expect(formatValue(null, "tỷ VND")).toBe("-");
   });
 
   it("calcChange handles rates and percent values", () => {
     const kpiRate: KPI = { key: "r1", label: "rate", unit: "%", agg: "last", desc: "", series: [], isRate: true };
     expect(calcChange(kpiRate, 0.12, 0.10)).toBeCloseTo((0.12 - 0.1) * 100);
 
-    const kpiNominal: KPI = { key: "n1", label: "nom", unit: "ty VND", agg: "last", desc: "", series: [], isRate: false };
+    const kpiNominal: KPI = { key: "n1", label: "nom", unit: "tỷ VND", agg: "last", desc: "", series: [], isRate: false };
     expect(calcChange(kpiNominal, 200, 100)).toBeCloseTo((200 - 100) / 100);
     expect(calcChange(kpiNominal, null, 100)).toBeNull();
   });
@@ -30,7 +30,7 @@ describe("kpi utils", () => {
     const kpi: KPI = {
       key: "agg1",
       label: "agg test",
-      unit: "cua hang",
+      unit: "cửa hàng",
       isRate: false,
       agg: "sum",
       desc: "",

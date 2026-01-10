@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "VN KPI Dashboard",
-  description: "Interactive KPI dashboard for PNJ, MWG, HPG, TCB",
+  title: "Bảng điều khiển KPI thị trường",
+  description: "Bảng điều khiển KPI tương tác cho PNJ, MWG, HPG, TCB",
 };
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="vi">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
