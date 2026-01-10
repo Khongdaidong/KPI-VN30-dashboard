@@ -1,7 +1,9 @@
 {
   "name": "kpi-dashboard-app",
   "version": "0.1.0",
+  "version": "0.1.0",
   "private": true,
+  "homepage": "https://khongdaidong.github.io/KPI-VN30-dashboard/",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,7 +11,8 @@
     "lint": "eslint",
     "test": "vitest",
     "test:ci": "vitest --run",
-    "refresh:data": "node scripts/scrape-official.js data/official-sources.json"
+    "refresh:data": "node scripts/scrape-official.js data/official-sources.json",
+    "deploy": "gh-pages -d out"
   },
   "dependencies": {
     "@napi-rs/canvas": "^0.1.88",
@@ -29,6 +32,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
+    "gh-pages": "^6.3.0",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^4.0.16"

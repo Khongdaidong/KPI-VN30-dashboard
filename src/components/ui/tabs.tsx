@@ -33,7 +33,7 @@ export function TabsList({ className, ...props }: React.HTMLAttributes<HTMLDivEl
   return (
     <div
       className={cn(
-        "inline-flex items-center justify-center rounded-xl border border-border bg-muted p-1 text-sm",
+        "inline-flex items-center justify-center rounded-xl bg-secondary/50 p-1 text-muted-foreground backdrop-blur-sm",
         className
       )}
       {...props}
@@ -55,9 +55,11 @@ export function TabsTrigger({ value, className, children, ...props }: TabsTrigge
       aria-pressed={isActive}
       onClick={() => ctx.onValueChange?.(value)}
       className={cn(
-        "inline-flex min-w-[72px] items-center justify-center rounded-lg px-3 py-2 text-sm font-medium transition",
+        "inline-flex min-w-[80px] items-center justify-center whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-200",
         "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60",
-        isActive ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
+        isActive
+          ? "bg-background text-foreground shadow-sm ring-1 ring-border/10"
+          : "text-muted-foreground hover:bg-background/40 hover:text-foreground",
         className
       )}
       {...props}

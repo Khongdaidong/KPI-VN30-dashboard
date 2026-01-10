@@ -11,16 +11,16 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const variantClasses: Record<ButtonVariant, string> = {
   default:
-    "bg-primary text-primary-foreground shadow hover:bg-primary/90 focus-visible:outline-primary/70",
+    "bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:bg-primary/90 focus-visible:outline-primary/70",
   outline:
-    "border border-border bg-transparent text-foreground hover:bg-muted focus-visible:outline-foreground/50",
-  ghost: "text-foreground hover:bg-muted focus-visible:outline-foreground/50",
+    "border border-border/60 bg-transparent text-foreground shadow-sm hover:bg-accent hover:text-accent-foreground focus-visible:outline-foreground/50",
+  ghost: "text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-foreground/50",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
   sm: "h-8 px-3 text-xs",
   md: "h-10 px-4 text-sm",
-  lg: "h-11 px-5 text-base",
+  lg: "h-11 px-6 text-base",
   icon: "h-10 w-10",
 };
 
@@ -33,7 +33,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       ref={ref}
       type={type}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition",
+        "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200 active:scale-95",
         "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50",
         sizeClasses[size],
         variantClasses[variant],

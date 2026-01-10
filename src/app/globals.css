@@ -1,21 +1,43 @@
 @import "tailwindcss";
 
 :root {
-  --background: #040507;
-  --foreground: #f5f7fb;
-  --card: #0b0d12;
-  --card-foreground: #f8fafc;
-  --muted: #0f1219;
-  --muted-foreground: #9aa3b5;
-  --border: #1e2633;
-  --primary: #10b981;
-  --primary-foreground: #04120c;
-  --secondary: #111622;
-  --secondary-foreground: #f8fafc;
-  --accent: #111825;
-  --accent-foreground: #e5e7eb;
-  --destructive: #ef4444;
-  --destructive-foreground: #f8fafc;
+  /* Deep Navy/Slate Foundation */
+  --background: #0B0E14; /* Much deeper, richer background */
+  --foreground: #F1F5F9; /* Slate-100 for text */
+  
+  /* Card/Surface Colors - Subtle gradients handled in components, this is base */
+  --card: #151A23; 
+  --card-foreground: #F8FAFC;
+  
+  --popover: #151A23;
+  --popover-foreground: #F8FAFC;
+  
+  /* Primary - Emerald for Growth/Money, but refined */
+  --primary: #10B981; 
+  --primary-foreground: #FFFFFF;
+  
+  /* Secondary - Muted Blue/Gray for distinct elements */
+  --secondary: #1E293B;
+  --secondary-foreground: #F8FAFC;
+  
+  /* Muted - For subtle text */
+  --muted: #334155;
+  --muted-foreground: #94A3B8;
+  
+  /* Accent - For hovers and highlights */
+  --accent: #1E293B;
+  --accent-foreground: #F1F5F9;
+  
+  /* Destructive - Refined Red */
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  
+  /* Borders - Subtle and glassy */
+  --border: #2D3748; /* Slate-700 approx */
+  --input: #2D3748;
+  --ring: #10B981;
+  
+  --radius: 0.75rem;
 }
 
 @theme inline {
@@ -23,34 +45,39 @@
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-border: var(--border);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-* {
-  box-sizing: border-box;
-}
-
-body {
-  min-height: 100vh;
-  background: radial-gradient(circle at 18% 18%, rgba(16, 185, 129, 0.08), transparent 28%),
-    radial-gradient(circle at 82% 12%, rgba(59, 130, 246, 0.08), transparent 26%),
-    #040507;
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
-}
-
-a {
-  color: inherit;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* Professional mesh gradient background */
+    background: 
+      radial-gradient(circle at 15% 50%, rgba(16, 185, 129, 0.08), transparent 25%),
+      radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.08), transparent 25%),
+      var(--background);
+    background-attachment: fixed;
+  }
 }
